@@ -11,6 +11,7 @@ public class Car
     private int year;
     private UUID vinCode;
     private Engine engine;
+    private ServiceBook serviceBook;
 
     public Car(String manufacturer, String modelName, int year, String type)
     {
@@ -20,6 +21,18 @@ public class Car
         this.vinCode = UUID.randomUUID();
         this.engine = new Engine(type);
         count++;
+    }
+
+    public void addServiceBook(ServiceBook serviceBook)
+    {
+        if (this.serviceBook == null)
+            this.serviceBook = serviceBook;
+    }
+
+    public void addEngine(Engine engine)
+    {
+        if (this.engine == null)
+            this.engine = engine;
     }
 
     public String toString()
@@ -60,5 +73,10 @@ public class Car
     public UUID getVinCode()
     {
         return this.vinCode;
+    }
+
+    public String getServiceBook()
+    {
+        return this.serviceBook.toString();
     }
 }

@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Engine
 {
     private String type;
+    private Car car;
 
     public Engine(String type)
     {
@@ -18,7 +19,7 @@ public class Engine
 
     public String toString()
     {
-        return String.format("%s", this.type);
+        return this.type;
     }
 
     public int hashCode()
