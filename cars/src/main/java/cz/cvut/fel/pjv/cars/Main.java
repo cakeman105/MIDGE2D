@@ -1,7 +1,5 @@
 package cz.cvut.fel.pjv.cars;
 
-import cz.cvut.fel.pjv.cars.model.Car;
-
 public class Main {
     public static void main(String[] args) {
         /* Car car1 = new Car("Volkswagen", "Polo", 2010);

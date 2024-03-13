@@ -41,29 +41,24 @@ public class Car
     {
         return Objects.hash(vinCode);
     }
-}
 
-class Engine
-{
-    private String type;
-
-    public Engine(String type)
+    public String getManufacturer()
     {
-        this.type = type;
+        return this.manufacturer;
     }
 
-    public boolean equals(Engine obj)
+    public String getModelName()
     {
-        return this.type.equals(obj.type);
+        return this.modelName;
     }
 
-    public String toString()
+    public int getYear()
     {
-        return String.format("%s", this.type);
+        return this.year;
     }
 
-    public int hashCode()
+    public UUID getVinCode()
     {
-        return Objects.hash(type);
+        return this.vinCode;
     }
 }
