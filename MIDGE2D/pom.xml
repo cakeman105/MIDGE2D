@@ -66,7 +66,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>cz.cvut.fel.pjv.midge2d/cz.cvut.fel.pjv.midge2d.HelloApplication</mainClass>
+              <mainClass>cz.cvut.fel.pjv.midge2d/cz.cvut.fel.pjv.midge2d.MIDGE2D</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
