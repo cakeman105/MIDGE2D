@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.midge2d;
 
+import cz.cvut.fel.pjv.midge2d.logic.KeyboardHandler;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,7 @@ public class MIDGE2D extends Application
         stage.setScene(scene);
         stage.getIcons().add(new Image(String.valueOf(MIDGE2D.class.getResource("icon.png"))));
         stage.show();
+        KeyboardHandler handler = new KeyboardHandler(scene);
     }
 
     public static void main(String[] args)

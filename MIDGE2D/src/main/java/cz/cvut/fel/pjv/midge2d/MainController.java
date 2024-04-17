@@ -2,6 +2,8 @@ package cz.cvut.fel.pjv.midge2d;
 
 import cz.cvut.fel.pjv.midge2d.logic.MapDraw;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -10,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,9 +47,16 @@ public class MainController
     /**
      * Open the about dialog
      */
-    public void onAboutClick()
+    public void onAboutClick() throws IOException
     {
-
+        FXMLLoader fxmlLoader = new FXMLLoader(MIDGE2D.class.getResource("about.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 300, 330);
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.getIcons().add(new Image(String.valueOf(MainController.class.getResource("icon.png"))));
+        stage.setScene(scene);
+        stage.setTitle("About");
+        stage.show();
     }
 
     /**
@@ -64,9 +74,9 @@ public class MainController
 
         mapLoadWarning.setVisible(false);
         mapLoadDescription.setVisible(false);
-        mapName.setText("Map name: " + sf.getName());
+        mapName.setText("Manifest: " + sf.getName());
         MapDraw mp = new MapDraw(sf.getAbsolutePath(), cvs);
-        BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         mainPane.setBackground(new Background(image));
         mp.run();
     }
@@ -80,6 +90,7 @@ public class MainController
         mapLoadWarning.setVisible(true);
         mapLoadDescription.setVisible(true);
         mapName.setText("No map loaded!");
+        cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         mainPane.setBackground(null);
     }
 
@@ -98,5 +109,12 @@ public class MainController
             logger.setLevel(Level.ALL);
             Logger.getLogger(MapDraw.class.getName()).setLevel(Level.ALL);
         }
+    }
+
+    public void onSaveClick()
+    {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save game state");
+        fc.showSaveDialog(new Stage());
     }
 }
