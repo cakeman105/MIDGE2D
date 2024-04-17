@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="330.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <Label layoutX="98.0" layoutY="123.0" text="MIDGE2D">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="78.0" fitWidth="187.0" layoutX="111.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icon_large.png" />
+         </image></ImageView>
+      <Label layoutX="36.0" layoutY="158.0" text="Modifiable Interactive Design Game Engine" />
+      <Label layoutX="23.0" layoutY="195.0" text="Written by Joshua David Crofts aka cakeman105" />
+      <Label layoutX="57.0" layoutY="212.0" text="Semester project PJV summer 2024" />
+      <ImageView fitHeight="78.0" fitWidth="104.0" layoutX="99.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@cat.gif" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
