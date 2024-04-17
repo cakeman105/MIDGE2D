@@ -24,9 +24,9 @@
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Debug">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-              </items>
+               <items>
+                  <CheckMenuItem mnemonicParsing="false" onAction="#onLoggingClick" text="Logging" />
+               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
@@ -37,14 +37,14 @@
       </MenuBar>
    </top>
    <left>
-      <Accordion blendMode="DARKEN" prefHeight="756.0" prefWidth="222.0" BorderPane.alignment="CENTER" style="-fx-border-color: grey">
+      <Accordion style="-fx-border-color: grey" prefHeight="756.0" prefWidth="222.0" BorderPane.alignment="CENTER">
         <panes>
           <TitledPane animated="false" text="Engine configuration">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Save files">
+          <TitledPane animated="false" blendMode="MULTIPLY" text="Save files">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
@@ -58,7 +58,7 @@
       </Accordion>
    </left>
    <bottom>
-      <HBox BorderPane.alignment="CENTER" style="-fx-border-color: grey">
+      <HBox style="-fx-border-color: grey" BorderPane.alignment="CENTER">
          <children>
             <Label text="MIDGE2D ver. experimental">
                <HBox.margin>

@@ -12,6 +12,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 public class MIDGE2D extends Application
 {

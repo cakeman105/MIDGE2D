@@ -1,7 +1,6 @@
 package cz.cvut.fel.pjv.midge2d.entity.item;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Inventory
 {

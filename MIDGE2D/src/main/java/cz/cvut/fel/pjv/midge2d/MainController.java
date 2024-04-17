@@ -10,7 +10,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * Class responsible for handling user interaction with the program
+ * @author Joshua David Crofts
+ */
 public class MainController
 {
     @FXML
@@ -28,11 +34,25 @@ public class MainController
     @FXML
     private Label mapLoadDescription;
 
+    protected static final Logger logger = Logger.getLogger(MainController.class.getName());
+
+    public MainController()
+    {
+        logger.setLevel(Level.SEVERE);
+    }
+
+    /**
+     * Open the about dialog
+     */
     public void onAboutClick()
     {
 
     }
 
+    /**
+     * Opens and starts drawing mappack
+     * @throws FileNotFoundException
+     */
     public void onOpenClick() throws FileNotFoundException
     {
         FileChooser fc = new FileChooser();
@@ -45,18 +65,38 @@ public class MainController
         mapLoadWarning.setVisible(false);
         mapLoadDescription.setVisible(false);
         mapName.setText("Map name: " + sf.getName());
-        MapDraw mp = new MapDraw(sf.getAbsolutePath(), cvs, mainPane);
-        mp.loadFile("/import/users/croftjos/Desktop/test_l1.midge");
+        MapDraw mp = new MapDraw(sf.getAbsolutePath(), cvs);
         BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         mainPane.setBackground(new Background(image));
-        mp.draw();
+        mp.run();
     }
 
+    /**
+     * Closes mappack, calls GC
+     * TODO
+     */
     public void onCloseClick()
     {
         mapLoadWarning.setVisible(true);
         mapLoadDescription.setVisible(true);
         mapName.setText("No map loaded!");
         mainPane.setBackground(null);
+    }
+
+    /**
+     * Turn logging globally on/off
+     */
+    public void onLoggingClick()
+    {
+        if (logger.getLevel() == Level.ALL)
+        {
+            logger.setLevel(Level.SEVERE);
+            Logger.getLogger(MapDraw.class.getName()).setLevel(Level.SEVERE);
+        }
+        else
+        {
+            logger.setLevel(Level.ALL);
+            Logger.getLogger(MapDraw.class.getName()).setLevel(Level.ALL);
+        }
     }
 }
