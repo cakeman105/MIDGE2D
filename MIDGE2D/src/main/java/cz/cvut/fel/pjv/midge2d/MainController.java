@@ -1,6 +1,6 @@
 package cz.cvut.fel.pjv.midge2d;
 
-import cz.cvut.fel.pjv.midge2d.logic.MapDraw;
+import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -47,16 +47,9 @@ public class MainController
     /**
      * Open the about dialog
      */
-    public void onAboutClick() throws IOException
+    public void onAboutClick()
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(MIDGE2D.class.getResource("about.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 300, 330);
-        Stage stage = new Stage();
-        stage.setResizable(false);
-        stage.getIcons().add(new Image(String.valueOf(MainController.class.getResource("icon.png"))));
-        stage.setScene(scene);
-        stage.setTitle("About");
-        stage.show();
+
     }
 
     /**
@@ -75,10 +68,9 @@ public class MainController
         mapLoadWarning.setVisible(false);
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
-        MapDraw mp = new MapDraw(sf.getAbsolutePath(), cvs);
-        BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        mainPane.setBackground(new Background(image));
-        mp.run();
+
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane);
+        game.run();
     }
 
     /**
@@ -102,12 +94,12 @@ public class MainController
         if (logger.getLevel() == Level.ALL)
         {
             logger.setLevel(Level.SEVERE);
-            Logger.getLogger(MapDraw.class.getName()).setLevel(Level.SEVERE);
+            Logger.getLogger(Graphics.class.getName()).setLevel(Level.SEVERE);
         }
         else
         {
             logger.setLevel(Level.ALL);
-            Logger.getLogger(MapDraw.class.getName()).setLevel(Level.ALL);
+            Logger.getLogger(Graphics.class.getName()).setLevel(Level.ALL);
         }
     }
 
