@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.midge2d;
 
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
+import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import cz.cvut.fel.pjv.midge2d.logic.KeyHandler;
 import javafx.animation.AnimationTimer;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -30,6 +32,7 @@ public class Game
     private Graphics graphics;
     private Player player;
     private KeyHandler handler;
+    private CollisionDetection detection;
     private static final int ROW_COUNT = 19; //very strange numbers
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
@@ -53,6 +56,8 @@ public class Game
         {
             loadMaps();
             loadMapToCharArray(this.mapList.getFirst());
+            this.detection = new CollisionDetection(this.map);
+            this.player.attachCollision(this.detection);
             canvas.setOnKeyPressed(this.handler);
             canvas.requestFocus();
             this.timer = new AnimationTimer()
@@ -61,7 +66,7 @@ public class Game
                 @Override
                 public void handle(long l)
                 {
-                    if (l - update >= 1_000_000)
+                    if (l - update >= 1_000_000_00)
                     {
                         tick();
                         update = l;

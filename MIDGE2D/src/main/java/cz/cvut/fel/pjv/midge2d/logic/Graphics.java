@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,10 +20,10 @@ public class Graphics
     private static final int CELL_SIZE = 42;
     private final Canvas cvs;
 
-
     public Graphics(Canvas cvs)
     {
         this.cvs = cvs;
+        logger.setLevel(Level.SEVERE);
     }
 
     /**

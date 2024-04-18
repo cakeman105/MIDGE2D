@@ -2,6 +2,7 @@ package cz.cvut.fel.pjv.midge2d.entity.character;
 
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
+import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
 import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
 public class Character
@@ -12,6 +13,7 @@ public class Character
     private int positionY;
     private int prevPositionX;
     private int prevPositionY;
+    private CollisionDetection detection;
 
     public Character(int health, Item weapon)
     {
@@ -65,12 +67,33 @@ public class Character
     {
         switch(direction)
         {
-            case Direction.MOVEMENT_UP -> this.positionX -= 1;
-            case Direction.MOVEMENT_DOWN -> this.positionX += 1;
-            case Direction.MOVEMENT_LEFT -> this.positionY -= 1;
-            case Direction.MOVEMENT_RIGHT -> this.positionY += 1;
+            case Direction.MOVEMENT_UP ->
+            {
+                if (this.detection.checkCoords(this.positionX - 1, this.positionY))
+                    this.positionX -= 1;
+            }
+            case Direction.MOVEMENT_DOWN ->
+            {
+                if (this.detection.checkCoords(this.positionX + 1, this.positionY))
+                    this.positionX += 1;
+            }
+            case Direction.MOVEMENT_LEFT ->
+            {
+                if (this.detection.checkCoords(this.positionX, this.positionY - 1))
+                    this.positionY -= 1;
+            }
+            case Direction.MOVEMENT_RIGHT ->
+            {
+                if (this.detection.checkCoords(this.positionX, this.positionY + 1))
+                    this.positionY += 1;
+            }
         }
         this.prevPositionX = positionX;
         this.prevPositionY = positionY;
+    }
+
+    public void attachCollision(CollisionDetection detection)
+    {
+        this.detection = detection;
     }
 }
