@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,6 +58,7 @@ public class Game
             this.detection = new CollisionDetection(this.map);
             this.player.attachCollision(this.detection);
             canvas.setOnKeyPressed(this.handler);
+            canvas.setFocusTraversable(true);
             canvas.requestFocus();
             this.timer = new AnimationTimer()
             {

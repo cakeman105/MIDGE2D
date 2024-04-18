@@ -78,7 +78,7 @@
                </font>
             </Label>
             <Label fx:id="mapLoadDescription" layoutX="404.0" layoutY="379.0" text="Please load an existing mappack" />
-            <Canvas fx:id="cvs" height="757.0" width="1000.0" />
+            <Canvas fx:id="cvs" focusTraversable="true" height="757.0" width="1000.0" />
          </children>
       </Pane>
    </center>
