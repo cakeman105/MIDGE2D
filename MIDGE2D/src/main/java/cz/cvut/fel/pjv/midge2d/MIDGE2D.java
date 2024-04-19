@@ -1,21 +1,14 @@
 package cz.cvut.fel.pjv.midge2d;
 
-import cz.cvut.fel.pjv.midge2d.logic.KeyboardHandler;
+import cz.cvut.fel.pjv.midge2d.entity.character.Player;
+import cz.cvut.fel.pjv.midge2d.logic.KeyHandler;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 
 public class MIDGE2D extends Application
 {
@@ -29,7 +22,6 @@ public class MIDGE2D extends Application
         stage.setScene(scene);
         stage.getIcons().add(new Image(String.valueOf(MIDGE2D.class.getResource("icon.png"))));
         stage.show();
-        KeyboardHandler handler = new KeyboardHandler(scene);
     }
 
     public static void main(String[] args)
