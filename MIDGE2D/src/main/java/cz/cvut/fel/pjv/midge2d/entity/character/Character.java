@@ -13,7 +13,7 @@ public class Character
     private int positionY;
     private int prevPositionX;
     private int prevPositionY;
-    private CollisionDetection detection;
+    protected CollisionDetection detection;
 
     public Character(int health, Item weapon)
     {
@@ -88,6 +88,7 @@ public class Character
                     this.positionY += 1;
             }
         }
+
         this.prevPositionX = positionX;
         this.prevPositionY = positionY;
     }

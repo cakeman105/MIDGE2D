@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,10 +47,9 @@ public class MainController
     }
 
     /**
-     * Opens and starts drawing mappack
-     * @throws FileNotFoundException
+     * Opens and starts drawing map pack
      */
-    public void onOpenClick() throws FileNotFoundException
+    public void onOpenClick()
     {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select mappack manifest");

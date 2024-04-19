@@ -2,7 +2,6 @@ package cz.cvut.fel.pjv.midge2d.logic;
 
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class KeyHandler implements EventHandler<KeyEvent>

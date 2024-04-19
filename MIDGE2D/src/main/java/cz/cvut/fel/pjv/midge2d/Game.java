@@ -1,7 +1,11 @@
 package cz.cvut.fel.pjv.midge2d;
 
+import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
+import cz.cvut.fel.pjv.midge2d.entity.item.Item;
+import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
+import cz.cvut.fel.pjv.midge2d.logic.Direction;
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import cz.cvut.fel.pjv.midge2d.logic.KeyHandler;
 import javafx.animation.AnimationTimer;
@@ -14,6 +18,7 @@ import javafx.scene.layout.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -26,8 +31,9 @@ public class Game
     private static AnimationTimer timer;
     private String directory;
     private char[][] map;
-    private Canvas canvas;
+    private final Canvas canvas;
     private ArrayList<String> mapList;
+    private ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Player player;
     private final KeyHandler handler;
@@ -38,6 +44,7 @@ public class Game
     public Game(String directory, Canvas canvas, Pane pane)
     {
         this.player = new Player();
+        this.enemies = new ArrayList<>();
         this.directory = directory;
         this.map = new char[ROW_COUNT][COL_COUNT];
         this.canvas = canvas;
@@ -56,9 +63,10 @@ public class Game
             loadMapToCharArray(this.mapList.getFirst());
             CollisionDetection detection = new CollisionDetection(this.map);
             this.player.attachCollision(detection);
+            this.enemies.forEach(e -> e.attachCollision(detection));
             canvas.setOnKeyPressed(this.handler);
             canvas.setFocusTraversable(true);
-            this.timer = new AnimationTimer()
+            timer = new AnimationTimer()
             {
                 private long update = 0;
                 @Override
@@ -72,7 +80,7 @@ public class Game
                 }
             };
 
-            this.timer.start();
+            timer.start();
         }
         catch (Exception ex)
         {
@@ -103,6 +111,12 @@ public class Game
                     map[i][j] = line[j];
                     if (map[i][j] == 'P')
                         this.player.setPosition(i, j);
+
+                    if(map[i][j] == 'E')
+                    {
+                        this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, Direction.MOVEMENT_RIGHT));
+                        this.enemies.getLast().setPosition(i, j);
+                    }
                 }
 
                 i++;
@@ -113,6 +127,7 @@ public class Game
     private void tick()
     {
         graphics.clearCanvas();
+        moveEnemies();
         graphics.draw(this.map);
         canvas.requestFocus();
     }
@@ -120,5 +135,16 @@ public class Game
     static public void stop()
     {
         timer.stop();
+    }
+
+    private void moveEnemies()
+    {
+        for (Enemy e : this.enemies)
+        {
+            map[e.getPositionX()][e.getPositionY()] = ' ';
+            e.moveEnemy();
+            map[e.getPrevPositionX()][e.getPrevPositionY()] = ' ';
+            map[e.getPositionX()][e.getPositionY()] = 'E';
+        }
     }
 }

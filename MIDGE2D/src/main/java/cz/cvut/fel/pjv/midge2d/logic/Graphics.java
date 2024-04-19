@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.midge2d.logic;
 import cz.cvut.fel.pjv.midge2d.MainController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Cell;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
@@ -36,6 +37,7 @@ public class Graphics
         context.clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         ImagePattern brick = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("brick.png"))));
         ImagePattern player = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("character.png"))));
+        ImagePattern enemy = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("enemy.png"))));
         context.setFill(brick);
         int x = 0, y = 0;
         for (int i = 0; i < map.length; i++)
@@ -52,6 +54,10 @@ public class Graphics
                         context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                         context.setFill(brick);
                         break;
+                    case 'E':
+                        context.setFill(enemy);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
                 }
 
                 logger.info(String.format("Loaded cell row %d col %d", i, j));
