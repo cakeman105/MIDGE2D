@@ -2,17 +2,13 @@ package cz.cvut.fel.pjv.midge2d;
 
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +34,6 @@ public class MainController
     private Label mapLoadDescription;
 
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
-
     public MainController()
     {
         logger.setLevel(Level.SEVERE);
@@ -82,6 +77,7 @@ public class MainController
         mapLoadWarning.setVisible(true);
         mapLoadDescription.setVisible(true);
         mapName.setText("No map loaded!");
+        Game.stop();
         cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         mainPane.setBackground(null);
     }

@@ -23,15 +23,14 @@ import java.util.logging.Logger;
  */
 public class Game
 {
-    private AnimationTimer timer;
+    private static AnimationTimer timer;
     private String directory;
     private char[][] map;
     private Canvas canvas;
     private ArrayList<String> mapList;
-    private Graphics graphics;
-    private Player player;
-    private KeyHandler handler;
-    private CollisionDetection detection;
+    private final Graphics graphics;
+    private final Player player;
+    private final KeyHandler handler;
     private static final int ROW_COUNT = 19; //very strange numbers
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
@@ -55,11 +54,10 @@ public class Game
         {
             loadMaps();
             loadMapToCharArray(this.mapList.getFirst());
-            this.detection = new CollisionDetection(this.map);
-            this.player.attachCollision(this.detection);
+            CollisionDetection detection = new CollisionDetection(this.map);
+            this.player.attachCollision(detection);
             canvas.setOnKeyPressed(this.handler);
             canvas.setFocusTraversable(true);
-            canvas.requestFocus();
             this.timer = new AnimationTimer()
             {
                 private long update = 0;
@@ -112,9 +110,15 @@ public class Game
         }
     }
 
-    public void tick()
+    private void tick()
     {
         graphics.clearCanvas();
         graphics.draw(this.map);
+        canvas.requestFocus();
+    }
+
+    static public void stop()
+    {
+        timer.stop();
     }
 }
