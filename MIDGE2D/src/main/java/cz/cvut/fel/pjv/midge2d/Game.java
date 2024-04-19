@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class Game
 {
     private AnimationTimer timer;
+    private BorderPane borderPane;
     private String directory;
     private char[][] map;
     private Canvas canvas;
@@ -36,8 +37,9 @@ public class Game
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
 
-    public Game(String directory, Canvas canvas, Pane pane)
+    public Game(String directory, Canvas canvas, Pane pane, BorderPane borderPane)
     {
+        this.borderPane = borderPane;
         this.player = new Player();
         this.directory = directory;
         this.map = new char[ROW_COUNT][COL_COUNT];
@@ -57,9 +59,9 @@ public class Game
             loadMapToCharArray(this.mapList.getFirst());
             this.detection = new CollisionDetection(this.map);
             this.player.attachCollision(this.detection);
-            canvas.setOnKeyPressed(this.handler);
-            canvas.setFocusTraversable(true);
-            canvas.requestFocus();
+            borderPane.setOnKeyPressed(this.handler);
+            borderPane.setFocusTraversable(true);
+            borderPane.requestFocus();
             this.timer = new AnimationTimer()
             {
                 private long update = 0;

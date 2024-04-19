@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 public class MainController
 {
     @FXML
+    private BorderPane borderPane;
+    @FXML
     private Label mapName;
 
     @FXML
@@ -69,7 +71,7 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane);
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, borderPane);
         game.run();
     }
 
