@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
+import java.util.random.RandomGenerator;
 
 /**
  * Class responsible for game runtime
@@ -35,6 +37,7 @@ public class Game
     private ArrayList<String> mapList;
     private ArrayList<Enemy> enemies;
     private final Graphics graphics;
+    private final Pane pane;
     private final Player player;
     private final KeyHandler handler;
     private static final int ROW_COUNT = 19; //very strange numbers
@@ -50,9 +53,8 @@ public class Game
         this.canvas = canvas;
         this.mapList = new ArrayList<>();
         this.graphics = new Graphics(this.canvas);
-        BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        pane.setBackground(new Background(image));
         this.handler = new KeyHandler(this.map, this.player);
+        this.pane = pane;
     }
 
     public void run()
@@ -64,6 +66,8 @@ public class Game
             CollisionDetection detection = new CollisionDetection(this.map);
             this.player.attachCollision(detection);
             this.enemies.forEach(e -> e.attachCollision(detection));
+            BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+            this.pane.setBackground(new Background(image));
             canvas.setOnKeyPressed(this.handler);
             canvas.setFocusTraversable(true);
             timer = new AnimationTimer()
@@ -72,7 +76,7 @@ public class Game
                 @Override
                 public void handle(long l)
                 {
-                    if (l - update >= 1_000_000_00)
+                    if (l - update >= 1_000_000_50)
                     {
                         tick();
                         update = l;
@@ -84,7 +88,8 @@ public class Game
         }
         catch (Exception ex)
         {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
+            alert.setHeaderText(ex.getMessage());
             alert.showAndWait();
         }
     }
@@ -99,6 +104,7 @@ public class Game
 
     private void loadMapToCharArray(String fileName) throws FileNotFoundException
     {
+        Random generator = new Random();
         File file = new File(fileName);
         try (Scanner scanner = new Scanner(file))
         {
@@ -114,7 +120,7 @@ public class Game
 
                     if(map[i][j] == 'E')
                     {
-                        this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, Direction.MOVEMENT_RIGHT));
+                        this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, generator.nextInt(2) == 1 ? Direction.MOVEMENT_RIGHT : Direction.MOVEMENT_LEFT));
                         this.enemies.getLast().setPosition(i, j);
                     }
                 }

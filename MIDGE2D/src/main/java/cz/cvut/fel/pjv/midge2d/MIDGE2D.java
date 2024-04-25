@@ -1,5 +1,5 @@
 package cz.cvut.fel.pjv.midge2d;
-
+  
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
