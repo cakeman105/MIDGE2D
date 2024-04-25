@@ -5,6 +5,10 @@ import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
 import java.util.logging.Logger;
 
+/**
+ * Enemy class
+ * @author Joshua David Crofts
+ */
 public class Enemy extends Character
 {
     private static final Logger logger = Logger.getLogger(Enemy.class.getName());

@@ -12,8 +12,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#onOpenClick" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#onCloseClick" text="Close" />
+              <MenuItem fx:id="openMenu" mnemonicParsing="false" onAction="#onOpenClick" text="Open" />
+                  <MenuItem fx:id="closeMenu" disable="true" mnemonicParsing="false" onAction="#onCloseClick" text="Close" />
                   <MenuItem mnemonicParsing="false" onAction="#onSaveClick" text="Save state" />
                   <MenuItem mnemonicParsing="false" text="Load state" />
             </items>
@@ -79,6 +79,11 @@
             </Label>
             <Label fx:id="mapLoadDescription" layoutX="404.0" layoutY="379.0" text="Please load an existing mappack" />
             <Canvas fx:id="cvs" focusTraversable="true" height="757.0" width="1000.0" />
+            <Label fx:id="hud_health" layoutX="14.0" layoutY="726.0" prefHeight="27.0" prefWidth="146.0" text="Health:" visible="false">
+               <font>
+                  <Font name="Lucida Console" size="18.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </center>

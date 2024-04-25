@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.midge2d.logic;
 
 import cz.cvut.fel.pjv.midge2d.MainController;
+import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Cell;
@@ -20,11 +21,19 @@ public class Graphics
     protected static final Logger logger = Logger.getLogger(Graphics.class.getName());
     private static final int CELL_SIZE = 42;
     private final Canvas cvs;
+    private final ImagePattern brick;
+    private final ImagePattern enemy;
+    private final ImagePattern player;
+    private final ImagePattern hud;
 
     public Graphics(Canvas cvs)
     {
         this.cvs = cvs;
         logger.setLevel(Level.SEVERE);
+        this.brick = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("wall.png"))));
+        this.enemy = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("enemy.gif"))));
+        this.player = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("character.gif"))));
+        this.hud = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hud.png"))));
     }
 
     /**
@@ -35,9 +44,6 @@ public class Graphics
         logger.info("Loading map.");
         GraphicsContext context = cvs.getGraphicsContext2D();
         context.clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
-        ImagePattern brick = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("brick.png"))));
-        ImagePattern player = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("character.png"))));
-        ImagePattern enemy = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("enemy.png"))));
         context.setFill(brick);
         int x = 0, y = 0;
         for (int i = 0; i < map.length; i++)
@@ -68,6 +74,18 @@ public class Graphics
             y += 40;
         }
         logger.info("Map loaded.");
+    }
+
+    public void drawHud(Player player)
+    {
+        GraphicsContext context = cvs.getGraphicsContext2D();
+        context.setFill(hud);
+        int x = 0, y = 720;
+        for (int j = 0; j < 26; j++)
+        {
+            context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            x += 40;
+        }
     }
 
     public void clearCanvas()

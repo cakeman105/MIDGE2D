@@ -4,6 +4,7 @@ import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -31,6 +32,15 @@ public class MainController
 
     @FXML
     private Label mapLoadDescription;
+
+    @FXML
+    private Label hud_health;
+
+    @FXML
+    private MenuItem closeMenu;
+
+    @FXML
+    private MenuItem openMenu;
 
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
     public MainController()
@@ -62,8 +72,10 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane);
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health);
         game.run();
+        closeMenu.setDisable(false);
+        openMenu.setDisable(true);
     }
 
     /**
@@ -75,7 +87,10 @@ public class MainController
         mapLoadWarning.setVisible(true);
         mapLoadDescription.setVisible(true);
         mapName.setText("No map loaded!");
+        closeMenu.setDisable(true);
+        openMenu.setDisable(false);
         Game.stop();
+        hud_health.setVisible(false);
         cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         mainPane.setBackground(null);
     }

@@ -4,25 +4,21 @@ import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
-import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
-import cz.cvut.fel.pjv.midge2d.logic.Direction;
-import cz.cvut.fel.pjv.midge2d.logic.Graphics;
-import cz.cvut.fel.pjv.midge2d.logic.KeyHandler;
+import cz.cvut.fel.pjv.midge2d.logic.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
-import java.util.random.RandomGenerator;
 
 /**
  * Class responsible for game runtime
@@ -30,6 +26,7 @@ import java.util.random.RandomGenerator;
  */
 public class Game
 {
+    public static GameState state;
     private static AnimationTimer timer;
     private String directory;
     private char[][] map;
@@ -38,13 +35,14 @@ public class Game
     private ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Pane pane;
+    private final Label health;
     private final Player player;
     private final KeyHandler handler;
     private static final int ROW_COUNT = 19; //very strange numbers
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
 
-    public Game(String directory, Canvas canvas, Pane pane)
+    public Game(String directory, Canvas canvas, Pane pane, Label health)
     {
         this.player = new Player();
         this.enemies = new ArrayList<>();
@@ -55,12 +53,15 @@ public class Game
         this.graphics = new Graphics(this.canvas);
         this.handler = new KeyHandler(this.map, this.player);
         this.pane = pane;
+        this.health = health;
+        this.health.setVisible(true);
     }
 
     public void run()
     {
         try
         {
+            Game.state = GameState.GAME_RUNNING;
             loadMaps();
             loadMapToCharArray(this.mapList.getFirst());
             CollisionDetection detection = new CollisionDetection(this.map);
@@ -135,12 +136,16 @@ public class Game
         graphics.clearCanvas();
         moveEnemies();
         graphics.draw(this.map);
+        graphics.drawHud(this.player);
+        health.setText(String.format("Health: %d", this.player.getHealth()));
         canvas.requestFocus();
+
     }
 
     static public void stop()
     {
         timer.stop();
+        Game.state = GameState.GAME_STOPPED;
     }
 
     private void moveEnemies()
