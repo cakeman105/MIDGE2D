@@ -3,8 +3,8 @@ package cz.cvut.fel.pjv.midge2d;
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  */
 public class MainController
 {
+    @FXML
+    private BorderPane borderPane;
     @FXML
     private Label mapName;
 
@@ -53,7 +55,15 @@ public class MainController
      */
     public void onAboutClick()
     {
-
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Written by Joshua David Crofts aka cakeman105\nSemester project PJV 2024\ngithub.com/cakeman105", ButtonType.CLOSE);
+        alert.setHeaderText("MIDGE2D - a simple lightweight 2D game engine");
+        alert.setTitle("About");
+        ImageView icon = new ImageView(String.valueOf(MainController.class.getResource("icon_large.png")));
+        icon.setFitHeight(48);
+        icon.setFitWidth(48);
+        alert.getDialogPane().setGraphic(icon);
+        alert.initOwner(cvs.getScene().getWindow());
+        alert.showAndWait();
     }
 
     /**
@@ -72,7 +82,7 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health);
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane);
         game.run();
         closeMenu.setDisable(false);
         openMenu.setDisable(true);

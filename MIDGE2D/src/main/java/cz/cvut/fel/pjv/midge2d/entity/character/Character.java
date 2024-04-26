@@ -31,6 +31,11 @@ public class Character
         return this.health;
     }
 
+    public void hit(Character character)
+    {
+        character.receiveDamage(this.weapon);
+    }
+
     public void receiveDamage(Item weapon)
     {
         if (weapon.getType() == ItemType.ITEM_GUN || weapon.getType() == ItemType.ITEM_KNIFE)

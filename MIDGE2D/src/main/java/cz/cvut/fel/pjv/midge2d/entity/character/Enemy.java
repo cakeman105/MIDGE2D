@@ -25,7 +25,6 @@ public class Enemy extends Character
             this.direction = Direction.MOVEMENT_LEFT;
         else if (!detection.checkCoords(this.getPrevPositionX(), this.getPositionY() + - 1) && direction == Direction.MOVEMENT_LEFT)
             this.direction = Direction.MOVEMENT_RIGHT;
-
         this.move(direction);
     }
 }

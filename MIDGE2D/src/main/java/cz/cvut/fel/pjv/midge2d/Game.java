@@ -10,8 +10,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,21 +28,22 @@ public class Game
 {
     public static GameState state;
     private static AnimationTimer timer;
-    private String directory;
+    private final String directory;
     private char[][] map;
     private final Canvas canvas;
-    private ArrayList<String> mapList;
-    private ArrayList<Enemy> enemies;
+    private final ArrayList<String> mapList;
+    private final ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Pane pane;
     private final Label health;
     private final Player player;
+    private final BorderPane borderPane;
     private final KeyHandler handler;
     private static final int ROW_COUNT = 19; //very strange numbers
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
 
-    public Game(String directory, Canvas canvas, Pane pane, Label health)
+    public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp)
     {
         this.player = new Player();
         this.enemies = new ArrayList<>();
@@ -55,6 +56,7 @@ public class Game
         this.pane = pane;
         this.health = health;
         this.health.setVisible(true);
+        this.borderPane = bp;
     }
 
     public void run()
@@ -67,10 +69,8 @@ public class Game
             CollisionDetection detection = new CollisionDetection(this.map);
             this.player.attachCollision(detection);
             this.enemies.forEach(e -> e.attachCollision(detection));
-            BackgroundImage image = new BackgroundImage(new Image(String.valueOf(this.getClass().getResource("background.png"))), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-            this.pane.setBackground(new Background(image));
-            canvas.setOnKeyPressed(this.handler);
-            canvas.setFocusTraversable(true);
+            this.pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+            borderPane.setOnKeyPressed(this.handler);
             timer = new AnimationTimer()
             {
                 private long update = 0;
@@ -91,10 +91,15 @@ public class Game
         {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
             alert.setHeaderText(ex.getMessage());
+            alert.initOwner(canvas.getScene().getWindow());
             alert.showAndWait();
         }
     }
 
+    /**
+     * load map paths to map list
+     * @throws FileNotFoundException this exception will not be thrown, as it's handled by the class that calls this
+     */
     private void loadMaps() throws FileNotFoundException
     {
         File file = new File(this.directory);
@@ -103,6 +108,11 @@ public class Game
             this.mapList.add(file.getParent() + scanner.nextLine());
     }
 
+    /**
+     * load map data into 2D char array for easy representation
+     * @param fileName map to be loaded
+     * @throws FileNotFoundException ditto as loadMaps
+     */
     private void loadMapToCharArray(String fileName) throws FileNotFoundException
     {
         Random generator = new Random();
@@ -138,8 +148,6 @@ public class Game
         graphics.draw(this.map);
         graphics.drawHud(this.player);
         health.setText(String.format("Health: %d", this.player.getHealth()));
-        canvas.requestFocus();
-
     }
 
     static public void stop()
@@ -148,6 +156,9 @@ public class Game
         Game.state = GameState.GAME_STOPPED;
     }
 
+    /**
+     * move all enemies into random direction until they hit wall
+     */
     private void moveEnemies()
     {
         for (Enemy e : this.enemies)

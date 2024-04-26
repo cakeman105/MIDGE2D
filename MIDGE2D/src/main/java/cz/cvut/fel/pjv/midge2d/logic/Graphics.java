@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 /**
  * Class responsible for graphics handling
- *
  * @author Joshua David Crofts
  */
 public class Graphics
@@ -25,15 +24,19 @@ public class Graphics
     private final ImagePattern enemy;
     private final ImagePattern player;
     private final ImagePattern hud;
+    private final ImagePattern knife;
+    private final ImagePattern gun;
 
     public Graphics(Canvas cvs)
     {
         this.cvs = cvs;
         logger.setLevel(Level.SEVERE);
         this.brick = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("wall.png"))));
-        this.enemy = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("enemy.gif"))));
-        this.player = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("character.gif"))));
+        this.enemy = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("enemy.png"))));
+        this.player = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("character.png"))));
         this.hud = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hud.png"))));
+        this.knife = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("knife.png"))));
+        this.gun = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("gun.png"))));
     }
 
     /**
@@ -64,6 +67,16 @@ public class Graphics
                         context.setFill(enemy);
                         context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                         context.setFill(brick);
+                        break;
+                    case 'K':
+                        context.setFill(knife);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
+                        break;
+                    case 'G':
+                        context.setFill(gun);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
                 }
 
                 logger.info(String.format("Loaded cell row %d col %d", i, j));
@@ -76,6 +89,10 @@ public class Graphics
         logger.info("Map loaded.");
     }
 
+    /**
+     * draws hud and inventory data
+     * @param player data to be displayed
+     */
     public void drawHud(Player player)
     {
         GraphicsContext context = cvs.getGraphicsContext2D();
