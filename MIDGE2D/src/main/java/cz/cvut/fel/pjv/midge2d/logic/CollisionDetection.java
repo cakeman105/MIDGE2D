@@ -18,14 +18,4 @@ public class CollisionDetection
     {
         return map[x][y] != '#';
     }
-
-    public ItemType checkItem(int x, int y)
-    {
-        return switch (map[x][x])
-        {
-            case 'K' -> ItemType.ITEM_KNIFE;
-            case 'G' -> ItemType.ITEM_GUN;
-            default -> null;
-        };
-    }
 }

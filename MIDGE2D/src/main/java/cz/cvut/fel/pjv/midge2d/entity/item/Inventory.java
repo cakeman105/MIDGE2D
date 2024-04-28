@@ -1,26 +1,24 @@
 package cz.cvut.fel.pjv.midge2d.entity.item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Inventory
 {
-    private final ArrayList<Item> inventory;
+    private final HashMap<ItemType, Item> inventory;
     public Inventory()
     {
-        this.inventory = new ArrayList<>();
+        this.inventory = new HashMap<>();
     }
 
-    public void removeItem(int index)
+    public void removeItem(ItemType type)
     {
-        inventory.remove(index);
+        inventory.remove(type);
     }
 
     public void addItem(Item item)
     {
-        if (!inventory.contains(item))
-        {
-            inventory.add(item);
-        }
+        inventory.put(item.getType(), item);
     }
 
     public void craft()
@@ -28,7 +26,7 @@ public class Inventory
 
     }
 
-    public ArrayList<Item> getInventory()
+    public HashMap<ItemType, Item> getInventory()
     {
         return this.inventory;
     }

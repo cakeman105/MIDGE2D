@@ -2,9 +2,9 @@ package cz.cvut.fel.pjv.midge2d.logic;
 
 import cz.cvut.fel.pjv.midge2d.MainController;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
+import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Cell;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
@@ -26,6 +26,8 @@ public class Graphics
     private final ImagePattern hud;
     private final ImagePattern knife;
     private final ImagePattern gun;
+    private final ImagePattern hudGun;
+    private final ImagePattern hudKnife;
 
     public Graphics(Canvas cvs)
     {
@@ -37,6 +39,8 @@ public class Graphics
         this.hud = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hud.png"))));
         this.knife = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("knife.png"))));
         this.gun = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("gun.png"))));
+        this.hudGun = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudGun.png"))));
+        this.hudKnife = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudKnife.png"))));
     }
 
     /**
@@ -98,7 +102,25 @@ public class Graphics
         GraphicsContext context = cvs.getGraphicsContext2D();
         context.setFill(hud);
         int x = 0, y = 720;
-        for (int j = 0; j < 26; j++)
+        for (int j = 0; j < 7; j++)
+        {
+            context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            x += 40;
+        }
+
+        for (Item e : player.getInventory().getInventory().values())
+        {
+            switch (e.getType())
+            {
+                case ITEM_GUN -> context.setFill(hudGun);
+                case ITEM_KNIFE -> context.setFill(hudKnife);
+            }
+            context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            x += 40;
+        }
+
+        context.setFill(hud);
+        for (int j = 7 + player.getInventory().getInventory().size(); j < 26; j++)
         {
             context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             x += 40;

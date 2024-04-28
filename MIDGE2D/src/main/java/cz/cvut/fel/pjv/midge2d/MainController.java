@@ -47,6 +47,9 @@ public class MainController
     @FXML
     private MenuItem openMenu;
 
+    @FXML
+    private Label gameState;
+
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
     public MainController()
     {
@@ -87,13 +90,13 @@ public class MainController
 
         Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth);
         game.run();
+        gameState.setText("State: " + Game.state.toString());
         closeMenu.setDisable(false);
         openMenu.setDisable(true);
     }
 
     /**
-     * Closes mappack, calls GC
-     * TODO
+     * Closes mappack
      */
     public void onCloseClick()
     {
@@ -102,6 +105,7 @@ public class MainController
         mapName.setText("No map loaded!");
         closeMenu.setDisable(true);
         openMenu.setDisable(false);
+        gameState.setText("State: " + Game.state.toString());
         Game.stop();
         hud_health.setVisible(false);
         cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());

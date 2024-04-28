@@ -10,6 +10,7 @@ import javafx.scene.media.AudioClip;
 
 /**
  * Event handler for key presses
+ *
  * @author Joshua David Crofts
  */
 public class KeyHandler implements EventHandler<KeyEvent>
@@ -19,9 +20,10 @@ public class KeyHandler implements EventHandler<KeyEvent>
     /**
      * movement sound for player
      */
-    AudioClip clip;
-    AudioClip punch;
+    final AudioClip clip;
+    final AudioClip punch;
     Enemy enemy;
+
     public KeyHandler(char[][] map, Player player)
     {
         this.map = map;
@@ -41,15 +43,16 @@ public class KeyHandler implements EventHandler<KeyEvent>
         if (event.getEventType() == KeyEvent.KEY_PRESSED)
         {
             KeyCode code = event.getCode();
-            map[player.getPositionX()][player.getPositionY()] = ' ';
-
-            if (code == KeyCode.D || code == KeyCode.A || code == KeyCode.W || code == KeyCode.S)
-                clip.play();
 
             if (code == KeyCode.E)
                 punch.play();
-            
-            switch(code)
+
+            if (code == KeyCode.D || code == KeyCode.A || code == KeyCode.W || code == KeyCode.S)
+            {
+                clip.play();
+                map[player.getPositionX()][player.getPositionY()] = ' ';
+            }
+            switch (code)
             {
                 case D -> player.move(Direction.MOVEMENT_RIGHT);
                 case A -> player.move(Direction.MOVEMENT_LEFT);

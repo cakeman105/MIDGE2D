@@ -1,9 +1,8 @@
 package cz.cvut.fel.pjv.midge2d.entity.character;
 
+import cz.cvut.fel.pjv.midge2d.entity.item.Inventory;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
-
-import java.util.ArrayList;
 
 /**
  * Player class
@@ -11,13 +10,13 @@ import java.util.ArrayList;
  */
 public class Player extends Character
 {
-    private final ArrayList<Item> inventory;
+    private final Inventory inventory;
     private Item currentWeapon;
 
     public Player()
     {
         super(100); //temporary
-        this.inventory = new ArrayList<>();
+        this.inventory = new Inventory();
         this.currentWeapon = new Item(ItemType.ITEM_GUN, 5, 10);
     }
 
@@ -31,21 +30,13 @@ public class Player extends Character
         character.receiveDamage(currentWeapon);
     }
 
-    /**
-     * changes current weapon based on player entry
-     * @param index order in inventory
-     */
-    public void changeWeapon(int index)
+    public Inventory getInventory()
     {
-        this.currentWeapon = this.inventory.get(index);
+        return this.inventory;
     }
 
-    /**
-     * adds picked up item to inventory
-     * @param item picked up
-     */
-    public void pickUpItem(Item item)
+    public void addItem(Item item)
     {
-        this.inventory.add(item);
+        this.inventory.addItem(item);
     }
 }

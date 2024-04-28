@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -65,6 +66,7 @@ public class Game
         this.enemyHealth = enemyHealth;
         this.isFighting = false;
         this.enemyFighting = null;
+        Game.state = GameState.GAME_STOPPED;
 
         logger.setLevel(Level.SEVERE);
     }
@@ -139,13 +141,15 @@ public class Game
                 for (int j = 0; j < line.length; j++)
                 {
                     map[i][j] = line[j];
-                    if (map[i][j] == 'P')
-                        this.player.setPosition(i, j);
 
-                    if (map[i][j] == 'E')
+                    switch (map[i][j])
                     {
-                        this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, generator.nextInt(2) == 1 ? Direction.MOVEMENT_RIGHT : Direction.MOVEMENT_LEFT));
-                        this.enemies.getLast().setPosition(i, j);
+                        case 'P' -> this.player.setPosition(i, j);
+                        case 'E' ->
+                        {
+                            this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, generator.nextInt(2) == 1 ? Direction.MOVEMENT_RIGHT : Direction.MOVEMENT_LEFT));
+                            this.enemies.getLast().setPosition(i, j);
+                        }
                     }
                 }
                 i++;
@@ -165,6 +169,7 @@ public class Game
         checkGameState();
         graphics.draw(this.map);
         graphics.drawHud(this.player);
+        checkItems();
         health.setText(String.format("Health: %d", this.player.getHealth()));
     }
 
@@ -199,7 +204,7 @@ public class Game
         if ((map[player.getPositionX()][player.getPositionY() + 1] == 'E' || map[player.getPositionX()][player.getPositionY() - 1] == 'E') && !isFighting)
         {
             this.enemyFighting = map[player.getPositionX()][player.getPositionY() + 1] == 'E' ? enemies.stream().filter(enemy -> enemy.getPositionX() == player.getPositionX() && enemy.getPositionY() == player.getPositionY() + 1).findFirst().get() :
-            enemies.stream().filter(enemy -> enemy.getPositionX() == player.getPositionX() && enemy.getPositionY() == player.getPositionY() - 1).findFirst().get();
+                    enemies.stream().filter(enemy -> enemy.getPositionX() == player.getPositionX() && enemy.getPositionY() == player.getPositionY() - 1).findFirst().get(); //these will never throw noSuchElement
             final Enemy enemyCopy = enemyFighting;
             isFighting = true;
             this.enemyHealth.setVisible(true);
@@ -216,8 +221,9 @@ public class Game
                         Thread.sleep(1500);
                     }
                     Thread.currentThread().interrupt(); //stop thread on enemy death or player death
+                } catch (InterruptedException ignored)
+                {
                 }
-                catch (InterruptedException ignored){}
             }).start();
 
             player.setMoving(false);
@@ -226,7 +232,7 @@ public class Game
 
         if (isFighting)
         {
-            enemyHealth.setText(String.format("Enemy health: %d",enemyFighting.getHealth()));
+            enemyHealth.setText(String.format("Enemy health: %d", enemyFighting.getHealth()));
             if (enemyFighting.getHealth() <= 0)
             {
                 isFighting = false;
@@ -249,8 +255,46 @@ public class Game
             Alert alert = new Alert(Alert.AlertType.WARNING, "You lost! Better luck next time...", ButtonType.CLOSE);
             alert.setTitle("You lost!");
             alert.setHeaderText("Dead!");
+            ImageView icon = new ImageView(String.valueOf(MainController.class.getResource("icon_large.png")));
+            icon.setFitHeight(48);
+            icon.setFitWidth(48);
+            alert.getDialogPane().setGraphic(icon);
+            alert.initOwner(canvas.getScene().getWindow());
             alert.show();
             logger.info("Player dead");
+        }
+    }
+
+    private void checkItems()
+    {
+        switch (map[player.getPositionX()][player.getPositionY() + 1])
+        {
+            case 'K' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 10, 15));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            case 'G' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 10, 35));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            default -> {}
+        }
+
+        switch (map[player.getPositionX()][player.getPositionY() - 1])
+        {
+            case 'K' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 10, 15));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            case 'G' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 10, 35));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            default -> {}
         }
     }
 }
