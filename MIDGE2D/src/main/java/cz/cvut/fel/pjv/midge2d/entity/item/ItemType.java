@@ -4,5 +4,5 @@ public enum ItemType
 {
     ITEM_KNIFE,
     ITEM_PAINKILLERS,
-    ITEM_GUN;
+    ITEM_GUN
 }

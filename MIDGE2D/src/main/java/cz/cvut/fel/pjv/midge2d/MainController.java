@@ -39,6 +39,9 @@ public class MainController
     private Label hud_health;
 
     @FXML
+    private Label hudEnemyHealth;
+
+    @FXML
     private MenuItem closeMenu;
 
     @FXML
@@ -82,7 +85,7 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane);
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth);
         game.run();
         closeMenu.setDisable(false);
         openMenu.setDisable(true);

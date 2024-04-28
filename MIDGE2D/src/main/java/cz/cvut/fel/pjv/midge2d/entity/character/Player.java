@@ -1,7 +1,7 @@
 package cz.cvut.fel.pjv.midge2d.entity.character;
 
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
-import cz.cvut.fel.pjv.midge2d.logic.Direction;
+import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 
 import java.util.ArrayList;
 
@@ -18,6 +18,7 @@ public class Player extends Character
     {
         super(100); //temporary
         this.inventory = new ArrayList<>();
+        this.currentWeapon = new Item(ItemType.ITEM_GUN, 5, 10);
     }
 
     /**
