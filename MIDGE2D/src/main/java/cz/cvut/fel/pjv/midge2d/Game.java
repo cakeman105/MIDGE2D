@@ -40,6 +40,7 @@ public class Game
     private final Pane pane;
     private final Label health;
     private final Label enemyHealth;
+    private final Label currentItem;
     private final Player player;
     private boolean isFighting;
     private final BorderPane borderPane;
@@ -49,7 +50,7 @@ public class Game
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
 
-    public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth)
+    public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth, Label currentItem)
     {
         this.player = new Player();
         this.enemies = new ArrayList<>();
@@ -60,6 +61,7 @@ public class Game
         this.graphics = new Graphics(this.canvas);
         this.handler = new KeyHandler(this.map, this.player);
         this.pane = pane;
+        this.currentItem = currentItem;
         this.health = health;
         this.health.setVisible(true);
         this.borderPane = bp;
@@ -165,6 +167,7 @@ public class Game
         logger.info("tick!");
         graphics.clearCanvas();
         moveEnemies();
+        currentItem.setText(player.getCurrentWeapon().toString());
         fight();
         checkGameState();
         graphics.draw(this.map);
@@ -217,8 +220,9 @@ public class Game
                 {
                     while (player.getHealth() > 0 && enemyFighting.getHealth() > 0)
                     {
+                        Thread.sleep(500);
                         enemyCopy.hit(player);
-                        Thread.sleep(1500);
+                        Thread.sleep(2000);
                     }
                     Thread.currentThread().interrupt(); //stop thread on enemy death or player death
                 } catch (InterruptedException ignored)

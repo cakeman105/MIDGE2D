@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.midge2d.logic;
 import cz.cvut.fel.pjv.midge2d.MainController;
 import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
+import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -63,6 +64,8 @@ public class KeyHandler implements EventHandler<KeyEvent>
                     if (enemy != null)
                         player.hit(enemy);
                 }
+                case KeyCode.DIGIT1 -> player.setCurrentWeapon(ItemType.ITEM_KNIFE); //invariant
+                case KeyCode.DIGIT2 -> player.setCurrentWeapon(ItemType.ITEM_GUN);
             }
 
             map[player.getPrevPositionX()][player.getPrevPositionY()] = ' ';

@@ -15,9 +15,9 @@ public class Player extends Character
 
     public Player()
     {
-        super(100); //temporary
+        super(100);
         this.inventory = new Inventory();
-        this.currentWeapon = new Item(ItemType.ITEM_GUN, 5, 10);
+        this.currentWeapon = new Item(ItemType.ITEM_FISTS, 5, 10);
     }
 
     /**
@@ -35,8 +35,14 @@ public class Player extends Character
         return this.inventory;
     }
 
-    public void addItem(Item item)
+    public void setCurrentWeapon(ItemType itemType)
     {
-        this.inventory.addItem(item);
+        if (this.inventory.getInventory().containsKey(itemType))
+            this.currentWeapon = this.inventory.getInventory().get(itemType);
+    }
+
+    public ItemType getCurrentWeapon()
+    {
+        return this.currentWeapon.getType();
     }
 }

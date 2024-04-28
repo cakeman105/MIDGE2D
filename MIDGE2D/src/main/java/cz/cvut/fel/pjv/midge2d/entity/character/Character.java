@@ -5,6 +5,11 @@ import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
 import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
+/**
+ * Main class for characters
+ * Use on its own not recommended
+ * @author Joshua David Crofts
+ */
 public class Character
 {
     private int health;
@@ -41,8 +46,7 @@ public class Character
 
     public void receiveDamage(Item weapon)
     {
-        if (weapon.getType() == ItemType.ITEM_GUN || weapon.getType() == ItemType.ITEM_KNIFE)
-            this.health -= weapon.getValue();
+        this.health -= weapon.getValue();
     }
 
     public void setPosition(int x, int y)

@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.midge2d;
 
+import cz.cvut.fel.pjv.midge2d.logic.GameState;
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -50,6 +51,9 @@ public class MainController
     @FXML
     private Label gameState;
 
+    @FXML
+    private Label currentItem;
+
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
     public MainController()
     {
@@ -88,9 +92,11 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth);
+        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth, currentItem);
         game.run();
         gameState.setText("State: " + Game.state.toString());
+        currentItem.setText("ITEM_FISTS");
+        currentItem.setVisible(true);
         closeMenu.setDisable(false);
         openMenu.setDisable(true);
     }
@@ -105,9 +111,11 @@ public class MainController
         mapName.setText("No map loaded!");
         closeMenu.setDisable(true);
         openMenu.setDisable(false);
+        Game.state = GameState.GAME_STOPPED;
         gameState.setText("State: " + Game.state.toString());
         Game.stop();
         hud_health.setVisible(false);
+        currentItem.setVisible(false);
         cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         mainPane.setBackground(null);
     }

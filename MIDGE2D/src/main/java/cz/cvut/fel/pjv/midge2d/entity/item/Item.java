@@ -1,5 +1,9 @@
 package cz.cvut.fel.pjv.midge2d.entity.item;
 
+/**
+ * Class for handling item logic
+ * @author Joshua David Crofts
+ */
 public class Item
 {
     private final ItemType Type;

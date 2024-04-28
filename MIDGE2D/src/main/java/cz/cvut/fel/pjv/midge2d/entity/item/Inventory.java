@@ -1,6 +1,5 @@
 package cz.cvut.fel.pjv.midge2d.entity.item;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Inventory
@@ -16,11 +15,19 @@ public class Inventory
         inventory.remove(type);
     }
 
+    /**
+     * Inventory can hold max 4 items
+     * @param item item to be added
+     */
     public void addItem(Item item)
     {
-        inventory.put(item.getType(), item);
+        if (inventory.size() < 4)
+            inventory.put(item.getType(), item);
     }
 
+    /**
+     * TODO
+     */
     public void craft()
     {
 
