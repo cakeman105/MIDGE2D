@@ -43,19 +43,17 @@
         <panes>
             <TitledPane fx:id="engineConfiguration" animated="false" text="Engine configuration">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <children>
                      <Label layoutX="62.0" layoutY="14.0" text="Render speed" />
                      <Spinner fx:id="renderSpeed" editable="true" layoutX="24.0" layoutY="31.0" />
                      <Button layoutX="51.0" layoutY="639.0" mnemonicParsing="false" text="Apply changes" />
-                  </children></AnchorPane>
+            </AnchorPane>
             </TitledPane>
             <TitledPane animated="false" text="Save files">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <children>
                      <ListView prefHeight="585.0" prefWidth="200.0" />
-                     <Button layoutX="61.0" layoutY="603.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Save game" />
+                     <Button layoutX="61.0" layoutY="603.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Save game" onAction="#onSaveClick"/>
                      <Button layoutX="60.0" layoutY="639.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Load save" />
-                  </children></AnchorPane>
+                </AnchorPane>
             </TitledPane>
             <TitledPane animated="false" text="Debug">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
@@ -70,7 +68,11 @@
                   <Insets right="50.0" />
               </HBox.margin>
            </Label>
-           <Label fx:id="mapName" text="no maps loaded!" />
+           <Label fx:id="mapName" text="no maps loaded!">
+            <HBox.margin>
+               <Insets right="50.0" />
+            </HBox.margin></Label>
+         <Label fx:id="gameState" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" text="State: GAME_STOPPED" />
        </HBox>
    </bottom>
    <center>
