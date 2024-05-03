@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <main.class>cz.cvut.fel.pjv.midge2d.Main</main.class>
+        <java>11</java>
     </properties>
 
     <dependencies>
@@ -80,6 +81,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
+                    <!--suppress UnresolvedMavenProperty -->
                     <mainClass>${javafx.main.class}</mainClass>
                 </configuration>
             </plugin>
