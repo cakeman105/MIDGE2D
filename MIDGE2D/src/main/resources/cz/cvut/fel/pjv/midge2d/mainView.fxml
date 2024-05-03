@@ -1,85 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane id="borderPane" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.cvut.fel.pjv.midge2d.MainController">
+<BorderPane fx:id="borderPane" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.cvut.fel.pjv.midge2d.MainController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#onOpenClick" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#onCloseClick" text="Close" />
-                  <MenuItem mnemonicParsing="false" onAction="#onSaveClick" text="Save state" />
-                  <MenuItem mnemonicParsing="false" text="Load state" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Debug">
-               <items>
-                  <CheckMenuItem mnemonicParsing="false" onAction="#onLoggingClick" text="Logging" />
-               </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#onAboutClick" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+       <MenuBar BorderPane.alignment="CENTER">
+           <Menu mnemonicParsing="false" text="File">
+               <MenuItem fx:id="openMenu" mnemonicParsing="false" onAction="#onOpenClick" text="Open" />
+               <MenuItem fx:id="closeMenu" disable="true" mnemonicParsing="false" onAction="#onCloseClick" text="Close" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveClick" text="Save state" />
+               <MenuItem mnemonicParsing="false" text="Load state" />
+           </Menu>
+           <Menu mnemonicParsing="false" text="Edit">
+               <MenuItem mnemonicParsing="false" text="Delete" />
+           </Menu>
+           <Menu mnemonicParsing="false" text="Debug">
+               <CheckMenuItem mnemonicParsing="false" onAction="#onLoggingClick" text="Logging" />
+           </Menu>
+           <Menu mnemonicParsing="false" text="Help">
+               <MenuItem mnemonicParsing="false" onAction="#onAboutClick" text="About" />
+           </Menu>
+       </MenuBar>
    </top>
    <left>
       <Accordion prefHeight="756.0" prefWidth="200.0" style="-fx-border-color: grey" BorderPane.alignment="CENTER">
         <panes>
-          <TitledPane animated="false" text="Engine configuration">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" blendMode="MULTIPLY" text="Save files">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" text="Debug">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
+            <TitledPane fx:id="engineConfiguration" animated="false" text="Engine configuration">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <Label layoutX="62.0" layoutY="14.0" text="Render speed" />
+                     <Spinner fx:id="renderSpeed" editable="true" layoutX="24.0" layoutY="31.0" />
+                     <Button layoutX="51.0" layoutY="639.0" mnemonicParsing="false" text="Apply changes" />
+            </AnchorPane>
+            </TitledPane>
+            <TitledPane animated="false" text="Save files">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <ListView prefHeight="585.0" prefWidth="200.0" />
+                     <Button layoutX="61.0" layoutY="603.0" mnemonicParsing="false" onAction="#onSaveClick" prefHeight="25.0" prefWidth="74.0" text="Save game" />
+                     <Button layoutX="60.0" layoutY="639.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Load save" />
+                </AnchorPane>
+            </TitledPane>
+            <TitledPane animated="false" text="Debug">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </TitledPane>
         </panes>
       </Accordion>
    </left>
    <bottom>
-      <HBox style="-fx-border-color: grey" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="MIDGE2D ver. experimental">
-               <HBox.margin>
+       <HBox style="-fx-border-color: grey" BorderPane.alignment="CENTER">
+           <Label text="MIDGE2D ver. experimental">
+              <HBox.margin>
                   <Insets right="50.0" />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="mapName" text="no maps loaded!" />
-         </children>
-      </HBox>
+              </HBox.margin>
+           </Label>
+           <Label fx:id="mapName" text="no maps loaded!">
+            <HBox.margin>
+               <Insets right="50.0" />
+            </HBox.margin></Label>
+         <Label fx:id="gameState" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" text="State: GAME_STOPPED" />
+       </HBox>
    </bottom>
    <center>
-      <Pane fx:id="mainPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="1000.0">
-         <children>
-            <Label fx:id="mapLoadWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="351.0" layoutY="326.0" text="No map loaded :(">
-               <font>
+       <Pane fx:id="mainPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="1000.0">
+           <Label fx:id="mapLoadWarning" alignment="CENTER" contentDisplay="CENTER" layoutX="351.0" layoutY="326.0" text="No map loaded :(">
+              <font>
                   <Font size="36.0" />
-               </font>
-            </Label>
-            <Label fx:id="mapLoadDescription" layoutX="404.0" layoutY="379.0" text="Please load an existing mappack" />
-            <Canvas fx:id="cvs" focusTraversable="true" height="757.0" width="1000.0" />
-         </children>
-      </Pane>
+              </font>
+           </Label>
+           <Label fx:id="mapLoadDescription" layoutX="404.0" layoutY="379.0" text="Please load an existing mappack" />
+           <Canvas fx:id="cvs" focusTraversable="true" height="757.0" width="1000.0" />
+           <Label fx:id="hud_health" layoutX="14.0" layoutY="726.0" prefHeight="27.0" prefWidth="146.0" text="Health:" visible="false">
+              <font>
+                  <Font name="Lucida Console" size="18.0" />
+              </font>
+           </Label>
+         <Label fx:id="hudEnemyHealth" layoutX="780.0" layoutY="723.0" prefHeight="28.0" prefWidth="204.0" text="Enemy health:" visible="false">
+            <font>
+               <Font name="Lucida Console" size="18.0" />
+            </font>
+         </Label>
+         <Label fx:id="currentItem" layoutX="580.0" layoutY="722.0" prefHeight="29.0" prefWidth="192.0" text="Item: " visible="false">
+            <font>
+               <Font name="Lucida Console" size="18.0" />
+            </font>
+         </Label>
+       </Pane>
    </center>
 </BorderPane>
