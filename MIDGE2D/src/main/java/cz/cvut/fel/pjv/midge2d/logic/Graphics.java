@@ -28,6 +28,12 @@ public class Graphics
     private final ImagePattern gun;
     private final ImagePattern hudGun;
     private final ImagePattern hudKnife;
+    private final ImagePattern door;
+    private final ImagePattern hudFlint;
+    private final ImagePattern hudSteel;
+    private final ImagePattern hudIron;
+    private final ImagePattern flint;
+    private final ImagePattern iron;
 
     public Graphics(Canvas cvs)
     {
@@ -41,10 +47,17 @@ public class Graphics
         this.gun = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("gun.png"))));
         this.hudGun = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudGun.png"))));
         this.hudKnife = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudKnife.png"))));
+        this.door = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("wood.png"))));
+        this.hudFlint = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudFlint.png"))));
+        this.hudSteel = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudSteel.png"))));
+        this.hudIron = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudIron.png"))));
+        this.flint = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("flint.png"))));
+        this.iron = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("ingot.png"))));
     }
 
     /**
      * Displays the map by drawing it on the canvas
+     * reads char value and draws corresponding texture
      */
     public void draw(char[][] map)
     {
@@ -81,6 +94,22 @@ public class Graphics
                         context.setFill(gun);
                         context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                         context.setFill(brick);
+                        break;
+                    case 'D':
+                        context.setFill(door);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
+                        break;
+                    case 'F':
+                        context.setFill(flint);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
+                        break;
+                    case 'I':
+                        context.setFill(iron);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
+                        break;
                 }
 
                 logger.info(String.format("Loaded cell row %d col %d", i, j));
@@ -114,6 +143,9 @@ public class Graphics
             {
                 case ITEM_GUN -> context.setFill(hudGun);
                 case ITEM_KNIFE -> context.setFill(hudKnife);
+                case ITEM_FLINT -> context.setFill(hudFlint);
+                case ITEM_STEEL -> context.setFill(hudSteel);
+                case ITEM_IRON -> context.setFill(hudIron);
             }
             context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             x += 40;

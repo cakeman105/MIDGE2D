@@ -38,6 +38,7 @@ public class Game
     private final ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Pane pane;
+    private final int RENDER_SPEED;
     private final Label health;
     private final Label enemyHealth;
     private final Label currentItem;
@@ -46,12 +47,21 @@ public class Game
     private final BorderPane borderPane;
     private Enemy enemyFighting;
     private final KeyHandler handler;
-    private static final int ROW_COUNT = 19; //very strange numbers
+    /**
+     * this value was chosen because of the screen size while designing the window
+     * do NOT change the value
+     */
+    private static final int ROW_COUNT = 19;
+    /**
+     * this value was chosen because of the screen size while designing the window
+     * @ do NOT change the value
+     */
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
 
     public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth, Label currentItem)
     {
+        this.RENDER_SPEED = 1_000_000_50;
         this.player = new Player();
         this.enemies = new ArrayList<>();
         this.directory = directory;
@@ -85,18 +95,18 @@ public class Game
             this.player.attachCollision(detection);
             this.enemies.forEach(e -> e.attachCollision(detection));
             this.pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-            borderPane.setOnKeyPressed(this.handler);
+            borderPane.setOnKeyReleased(this.handler);
             timer = new AnimationTimer()
             {
                 private long update = 0;
 
                 @Override
-                public void handle(long l)
+                public void handle(long val)
                 {
-                    if (l - update >= 1_000_000_50)
+                    if (val - update >= RENDER_SPEED)
                     {
                         tick();
-                        update = l;
+                        update = val;
                     }
                 }
             };
@@ -119,9 +129,11 @@ public class Game
     private void loadMaps() throws FileNotFoundException
     {
         File file = new File(this.directory);
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine())
-            this.mapList.add(file.getParent() + scanner.nextLine());
+        try (Scanner scanner = new Scanner(file))
+        {
+            while (scanner.hasNextLine())
+                this.mapList.add(file.getParent() + scanner.nextLine());
+        }
     }
 
     /**
@@ -149,7 +161,7 @@ public class Game
                         case 'P' -> this.player.setPosition(i, j);
                         case 'E' ->
                         {
-                            this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 5, 20), 100, generator.nextInt(2) == 1 ? Direction.MOVEMENT_RIGHT : Direction.MOVEMENT_LEFT));
+                            this.enemies.add(new Enemy(new Item(ItemType.ITEM_GUN, 20), 100, generator.nextInt(2) == 1 ? Direction.MOVEMENT_RIGHT : Direction.MOVEMENT_LEFT));
                             this.enemies.getLast().setPosition(i, j);
                         }
                     }
@@ -269,18 +281,31 @@ public class Game
         }
     }
 
+    /**
+     * checks whether player picked up an item, stores it in inventory if so
+     */
     private void checkItems()
     {
         switch (map[player.getPositionX()][player.getPositionY() + 1])
         {
             case 'K' ->
             {
-                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 10, 15));
+                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 15));
                 map[player.getPositionX()][player.getPositionY() + 1] = ' ';
             }
             case 'G' ->
             {
-                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 10, 35));
+                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 35));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            case 'F' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_FLINT, 35));
+                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+            }
+            case 'I' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_IRON, 35));
                 map[player.getPositionX()][player.getPositionY() + 1] = ' ';
             }
             default -> {}
@@ -290,13 +315,23 @@ public class Game
         {
             case 'K' ->
             {
-                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 10, 15));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 15));
+                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
             }
             case 'G' ->
             {
-                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 10, 35));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
+                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 35));
+                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+            }
+            case 'F' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_FLINT, 35));
+                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+            }
+            case 'I' ->
+            {
+                player.getInventory().addItem(new Item(ItemType.ITEM_IRON, 35));
+                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
             }
             default -> {}
         }

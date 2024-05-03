@@ -41,7 +41,7 @@ public class KeyHandler implements EventHandler<KeyEvent>
     @Override
     public void handle(KeyEvent event)
     {
-        if (event.getEventType() == KeyEvent.KEY_PRESSED)
+        if (event.getEventType() == KeyEvent.KEY_RELEASED )
         {
             KeyCode code = event.getCode();
 
@@ -66,6 +66,7 @@ public class KeyHandler implements EventHandler<KeyEvent>
                 }
                 case KeyCode.DIGIT1 -> player.setCurrentWeapon(ItemType.ITEM_KNIFE); //invariant
                 case KeyCode.DIGIT2 -> player.setCurrentWeapon(ItemType.ITEM_GUN);
+
             }
 
             map[player.getPrevPositionX()][player.getPrevPositionY()] = ' ';

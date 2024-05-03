@@ -16,6 +16,6 @@ public class CollisionDetection
 
     public boolean checkCoords(int x, int y)
     {
-        return map[x][y] != '#';
+        return map[x][y] != '#' && map[x][y] != 'D';
     }
 }

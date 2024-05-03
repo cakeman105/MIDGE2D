@@ -17,7 +17,7 @@ public class Player extends Character
     {
         super(100);
         this.inventory = new Inventory();
-        this.currentWeapon = new Item(ItemType.ITEM_FISTS, 5, 10);
+        this.currentWeapon = new Item(ItemType.ITEM_FISTS, 10);
     }
 
     /**
