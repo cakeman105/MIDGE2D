@@ -14,8 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -335,5 +334,39 @@ public class Game
             }
             default -> {}
         }
+    }
+
+    /**
+     * save the current state of the game
+     */
+    public void saveGame(char[][] map, File file)
+    {
+        try (Writer writer = new FileWriter(file))
+        {
+            for (char[] row : map)
+                writer.write(String.valueOf(row));
+
+            writer.write(this.directory);
+        }
+        catch (IOException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
+            alert.setTitle(e.getMessage());
+            alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * load existing save file
+     */
+    public void loadSave()
+    {
+
+    }
+
+    public char[][] getMap()
+    {
+        return map;
     }
 }

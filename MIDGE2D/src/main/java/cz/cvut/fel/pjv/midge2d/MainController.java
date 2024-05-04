@@ -2,6 +2,8 @@ package cz.cvut.fel.pjv.midge2d;
 
 import cz.cvut.fel.pjv.midge2d.logic.GameState;
 import cz.cvut.fel.pjv.midge2d.logic.Graphics;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -54,10 +56,19 @@ public class MainController
     @FXML
     private Label currentItem;
 
+    @FXML
+    private ListView<String> saveFiles;
+
+    private Game game;
+
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
+
     public MainController()
     {
         logger.setLevel(Level.SEVERE);
+        Game.state = GameState.GAME_STOPPED;
+
+
     }
 
     /**
@@ -92,8 +103,8 @@ public class MainController
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
 
-        Game game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth, currentItem);
-        game.run();
+        this.game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth, currentItem);
+        this.game.run();
         gameState.setText("State: " + Game.state.toString());
         currentItem.setText("ITEM_FISTS");
         currentItem.setVisible(true);
@@ -129,8 +140,7 @@ public class MainController
         {
             logger.setLevel(Level.SEVERE);
             Logger.getLogger(Graphics.class.getName()).setLevel(Level.SEVERE);
-        }
-        else
+        } else
         {
             logger.setLevel(Level.ALL);
             Logger.getLogger(Graphics.class.getName()).setLevel(Level.ALL);
@@ -139,8 +149,24 @@ public class MainController
 
     public void onSaveClick()
     {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Save game state");
-        fc.showSaveDialog(new Stage());
+        if (Game.state == GameState.GAME_RUNNING)
+        {
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Save game state");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.midgesave"));
+            File file = fc.showSaveDialog(new Stage());
+            this.game.saveGame(this.game.getMap(), file);
+        }
+    }
+
+    public void onLoadClick()
+    {
+
+    }
+
+    public void onSaveFilesClick()
+    {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        this.saveFiles.setItems(list);
     }
 }
