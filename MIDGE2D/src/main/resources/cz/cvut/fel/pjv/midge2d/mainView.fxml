@@ -25,10 +25,7 @@
                <MenuItem fx:id="openMenu" mnemonicParsing="false" onAction="#onOpenClick" text="Open" />
                <MenuItem fx:id="closeMenu" disable="true" mnemonicParsing="false" onAction="#onCloseClick" text="Close" />
                <MenuItem mnemonicParsing="false" onAction="#onSaveClick" text="Save state" />
-               <MenuItem mnemonicParsing="false" text="Load state" />
-           </Menu>
-           <Menu mnemonicParsing="false" text="Edit">
-               <MenuItem mnemonicParsing="false" text="Delete" />
+               <MenuItem mnemonicParsing="false" onAction="#onLoadClick" text="Load state" />
            </Menu>
            <Menu mnemonicParsing="false" text="Debug">
                <CheckMenuItem mnemonicParsing="false" onAction="#onLoggingClick" text="Logging" />
@@ -48,9 +45,9 @@
                      <Button layoutX="51.0" layoutY="639.0" mnemonicParsing="false" text="Apply changes" />
             </AnchorPane>
             </TitledPane>
-            <TitledPane animated="false" text="Save files">
+            <TitledPane animated="false" onMouseClicked="#onSaveFilesClick" text="Save files">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <ListView prefHeight="585.0" prefWidth="200.0" />
+                     <ListView fx:id="saveFiles" prefHeight="585.0" prefWidth="200.0" />
                      <Button layoutX="61.0" layoutY="603.0" mnemonicParsing="false" onAction="#onSaveClick" prefHeight="25.0" prefWidth="74.0" text="Save game" />
                      <Button layoutX="60.0" layoutY="639.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Load save" />
                 </AnchorPane>
