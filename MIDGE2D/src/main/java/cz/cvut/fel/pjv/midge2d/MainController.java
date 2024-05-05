@@ -12,6 +12,12 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +29,7 @@ public class MainController
 {
     @FXML
     private BorderPane borderPane;
+
     @FXML
     private Label mapName;
 
@@ -59,7 +66,10 @@ public class MainController
     @FXML
     private ListView<String> saveFiles;
 
+    @FXML
+    private Spinner<Integer> renderSpeed;
     private Game game;
+    private String directory;
 
     protected static final Logger logger = Logger.getLogger(MainController.class.getName());
 
@@ -67,8 +77,6 @@ public class MainController
     {
         logger.setLevel(Level.SEVERE);
         Game.state = GameState.GAME_STOPPED;
-
-
     }
 
     /**
@@ -99,6 +107,7 @@ public class MainController
         if (sf == null)
             return;
 
+        this.directory = sf.getParent();
         mapLoadWarning.setVisible(false);
         mapLoadDescription.setVisible(false);
         mapName.setText("Manifest: " + sf.getName());
@@ -106,7 +115,7 @@ public class MainController
         this.game = new Game(sf.getAbsolutePath(), cvs, mainPane, hud_health, borderPane, hudEnemyHealth, currentItem);
         this.game.run();
         gameState.setText("State: " + Game.state.toString());
-        currentItem.setText("ITEM_FISTS");
+        currentItem.setText("ITEM_FISTS"); //default value
         currentItem.setVisible(true);
         closeMenu.setDisable(false);
         openMenu.setDisable(true);
@@ -151,22 +160,65 @@ public class MainController
     {
         if (Game.state == GameState.GAME_RUNNING)
         {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Save game state");
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.midgesave"));
-            File file = fc.showSaveDialog(new Stage());
-            this.game.saveGame(this.game.getMap(), file);
+            //FileChooser fc = new FileChooser();
+            //fc.setTitle("Save game state");
+            //fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.txt"));
+            //fc.setInitialDirectory(new File(this.directory.concat("/saves")));
+            File file = new File("C:\\Users\\joshu\\Desktop\\testpack\\testpack_l0.midge");
+            Path copied = Paths.get("C:\\Users\\joshu\\Desktop\\testpack\\saves\\testpack_l0.midge");
+            try
+            {
+                Files.copy(file.toPath(), copied, StandardCopyOption.REPLACE_EXISTING);
+            }
+            catch (IOException e)
+            {
+
+            }
+            this.game.saveGame(this.game.getMap(), new File(copied.toString()));
         }
     }
 
     public void onLoadClick()
     {
-
+        String selected = this.saveFiles.getSelectionModel().getSelectedItem();
+        if (selected != null && !selected.isEmpty())
+        {
+            String directory = String.format("%s/saves/%s", this.directory, selected);
+            this.game.loadSave(directory);
+        }
     }
 
+    /**
+     * Loads save files located in "saves" folder
+     */
     public void onSaveFilesClick()
     {
-        ObservableList<String> list = FXCollections.observableArrayList();
-        this.saveFiles.setItems(list);
+        try
+        {
+            ObservableList<String> list = FXCollections.observableArrayList();
+            File dir = new File(this.directory.concat("/saves"));
+            File[] files = dir.listFiles();
+            if (files == null)
+                return;
+
+            for (File file : files)
+                list.add(file.getName());
+            this.saveFiles.setItems(list);
+        }
+        catch (NullPointerException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
+            alert.setHeaderText("Cannot load save files as directory has not been specified!");
+            alert.setTitle("Error");
+            alert.showAndWait();
+        }
+    }
+
+    public void onApplyChangesClick()
+    {
+        if (Game.state == GameState.GAME_RUNNING)
+        {
+            this.game.setRenderSpeed(renderSpeed.getValue());
+        }
     }
 }

@@ -35,10 +35,14 @@ public class Player extends Character
         return this.inventory;
     }
 
-    public void setCurrentWeapon(ItemType itemType)
+    public void setCurrentWeapon(int index)
     {
-        if (this.inventory.getInventory().containsKey(itemType))
-            this.currentWeapon = this.inventory.getInventory().get(itemType);
+        try
+        {
+            ItemType key = (ItemType) this.inventory.getInventory().keySet().toArray()[index];
+            this.currentWeapon = this.inventory.getInventory().get(key);
+        }
+        catch (IndexOutOfBoundsException ignored){} //nothing happens if item does not exist in inventory
     }
 
     public ItemType getCurrentWeapon()

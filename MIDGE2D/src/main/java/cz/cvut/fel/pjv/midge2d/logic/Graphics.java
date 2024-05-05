@@ -34,6 +34,7 @@ public class Graphics
     private final ImagePattern hudIron;
     private final ImagePattern flint;
     private final ImagePattern iron;
+    private final ImagePattern heart;
 
     public Graphics(Canvas cvs)
     {
@@ -53,6 +54,7 @@ public class Graphics
         this.hudIron = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("hudIron.png"))));
         this.flint = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("flint.png"))));
         this.iron = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("ingot.png"))));
+        this.heart = new ImagePattern(new Image(String.valueOf(MainController.class.getResource("heart.png"))));
     }
 
     /**
@@ -107,6 +109,11 @@ public class Graphics
                         break;
                     case 'I':
                         context.setFill(iron);
+                        context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        context.setFill(brick);
+                        break;
+                    case 'H':
+                        context.setFill(heart);
                         context.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                         context.setFill(brick);
                         break;

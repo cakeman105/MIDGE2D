@@ -112,6 +112,7 @@ public class Character
     {
         this.detection = detection;
     }
+
     public void setMoving(boolean value)
     {
         this.isMoving = value;
@@ -120,5 +121,10 @@ public class Character
     public boolean getMoving()
     {
         return this.isMoving;
+    }
+
+    public void setHealth(int health)
+    {
+        this.health = health;
     }
 }

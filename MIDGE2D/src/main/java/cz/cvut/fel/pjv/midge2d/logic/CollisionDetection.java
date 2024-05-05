@@ -1,7 +1,5 @@
 package cz.cvut.fel.pjv.midge2d.logic;
 
-import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
-
 /**
  * class for handling collision detection
  * @author Joshua David Crofts
@@ -17,7 +15,7 @@ public class CollisionDetection
     public boolean checkCoords(int x, int y)
     {
         if (x < 0 || x >= map.length || y < 0 || y >= map[0].length) //run check for end of map
-            return true;
+            return false;
 
         return map[x][y] != '#' && map[x][y] != 'D';
     }

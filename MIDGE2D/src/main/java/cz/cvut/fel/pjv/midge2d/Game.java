@@ -15,7 +15,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -37,12 +39,14 @@ public class Game
     private final ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Pane pane;
-    private final int RENDER_SPEED;
+    private int renderSpeed;
     private final Label health;
     private final Label enemyHealth;
     private final Label currentItem;
     private final Player player;
     private boolean isFighting;
+    private boolean loadedFromSave;
+    private String mapToLoad;
     private final BorderPane borderPane;
     private Enemy enemyFighting;
     private final KeyHandler handler;
@@ -50,17 +54,19 @@ public class Game
      * this value was chosen because of the screen size while designing the window
      * do NOT change the value
      */
-    private static final int ROW_COUNT = 19;
+    private static final int ROW_COUNT = 18;
     /**
      * this value was chosen because of the screen size while designing the window
+     *
      * @ do NOT change the value
      */
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
+    private final Iterator<String> iterator;
 
     public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth, Label currentItem)
     {
-        this.RENDER_SPEED = 1_000_000_50;
+        this.renderSpeed = 1_000_000_50;
         this.player = new Player();
         this.enemies = new ArrayList<>();
         this.directory = directory;
@@ -68,55 +74,59 @@ public class Game
         this.canvas = canvas;
         this.mapList = new ArrayList<>();
         this.graphics = new Graphics(this.canvas);
-        this.handler = new KeyHandler(this.map, this.player);
         this.pane = pane;
         this.currentItem = currentItem;
         this.health = health;
         this.health.setVisible(true);
         this.borderPane = bp;
         this.enemyHealth = enemyHealth;
+        this.handler = new KeyHandler(this.map, this.player, this.enemyHealth);
         this.isFighting = false;
         this.enemyFighting = null;
+        this.loadedFromSave = false;
         Game.state = GameState.GAME_STOPPED;
-
+        try
+        {
+            loadMaps();
+        }
+        catch (IOException ignored){}
+        this.iterator = mapList.iterator();
         logger.setLevel(Level.SEVERE);
+        timer = new AnimationTimer()
+        {
+            private long update = 0;
+
+            @Override
+            public void handle(long val)
+            {
+                if (val - update >= renderSpeed)
+                {
+                    tick();
+                    update = val;
+                }
+            }
+        };
     }
 
     public void run()
     {
         try
         {
+            enemies.clear();
             logger.info("Init game");
             Game.state = GameState.GAME_RUNNING;
-            loadMaps();
-            loadMapToCharArray(this.mapList.getFirst());
+            this.mapToLoad = this.iterator.next();
+            if (!loadedFromSave)
+                loadMapToCharArray(mapToLoad);
             CollisionDetection detection = new CollisionDetection(this.map);
             this.player.attachCollision(detection);
             this.enemies.forEach(e -> e.attachCollision(detection));
             this.pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
             borderPane.setOnKeyReleased(this.handler);
-            timer = new AnimationTimer()
-            {
-                private long update = 0;
-
-                @Override
-                public void handle(long val)
-                {
-                    if (val - update >= RENDER_SPEED)
-                    {
-                        tick();
-                        update = val;
-                    }
-                }
-            };
-
             timer.start();
-        } catch (Exception ex)
+        } catch (Exception ignored)
         {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
-            alert.setHeaderText(ex.getMessage());
-            alert.initOwner(canvas.getScene().getWindow());
-            alert.showAndWait();
+
         }
     }
 
@@ -151,7 +161,7 @@ public class Game
             while (scanner.hasNextLine())
             {
                 char[] line = scanner.nextLine().toCharArray();
-                for (int j = 0; j < line.length; j++)
+                for (int j = 0; j < COL_COUNT - 1; j++)
                 {
                     map[i][j] = line[j];
 
@@ -236,9 +246,7 @@ public class Game
                         Thread.sleep(2000);
                     }
                     Thread.currentThread().interrupt(); //stop thread on enemy death or player death
-                } catch (InterruptedException ignored)
-                {
-                }
+                } catch (InterruptedException ignored) {}
             }).start();
 
             player.setMoving(false);
@@ -252,7 +260,8 @@ public class Game
             {
                 isFighting = false;
                 enemyHealth.setVisible(false);
-                map[enemyFighting.getPositionX()][enemyFighting.getPositionY()] = ' '; //wiped from the face of the earth
+                map[enemyFighting.getPositionX()][enemyFighting.getPositionY()] = ' ';
+                this.enemies.remove(enemyFighting);
                 this.player.setMoving(true);
             }
         }
@@ -267,16 +276,37 @@ public class Game
         {
             state = GameState.GAME_STOPPED;
             stop();
-            Alert alert = new Alert(Alert.AlertType.WARNING, "You lost! Better luck next time...", ButtonType.CLOSE);
-            alert.setTitle("You lost!");
-            alert.setHeaderText("Dead!");
-            ImageView icon = new ImageView(String.valueOf(MainController.class.getResource("icon_large.png")));
-            icon.setFitHeight(48);
-            icon.setFitWidth(48);
-            alert.getDialogPane().setGraphic(icon);
-            alert.initOwner(canvas.getScene().getWindow());
-            alert.show();
+            displayAlert("You lost!", "You lost! Better luck next time...", "Loser!");
             logger.info("Player dead");
+        }
+
+        if (!iterator.hasNext() && enemies.isEmpty())
+        {
+            state = GameState.GAME_FINISHED;
+        }
+
+        switch (state)
+        {
+            case GAME_FINISHED ->
+            {
+                timer.stop();
+                displayAlert("You win!", "Congratulations! You have completed the map pack!", "Winner!");
+                logger.info("Game finished!");
+            }
+            case GAME_CRAFTING ->
+            {
+                enemyHealth.setVisible(true);
+                enemyHealth.setText(player.getInventory().getCraftingToString());
+            }
+            case MAP_COMPLETE ->
+            {
+                if (enemies.isEmpty())
+                {
+                    this.loadedFromSave = false;
+                    timer.stop();
+                    run();
+                }
+            }
         }
     }
 
@@ -285,54 +315,60 @@ public class Game
      */
     private void checkItems()
     {
-        switch (map[player.getPositionX()][player.getPositionY() + 1])
+        int[] coords = new int[2];
+        if (map[player.getPositionX()][player.getPositionY() + 1] != '#' && map[player.getPositionX()][player.getPositionY() + 1] != ' ')
         {
-            case 'K' ->
-            {
-                player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 15));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
-            }
-            case 'G' ->
-            {
-                player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 35));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
-            }
-            case 'F' ->
-            {
-                player.getInventory().addItem(new Item(ItemType.ITEM_FLINT, 35));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
-            }
-            case 'I' ->
-            {
-                player.getInventory().addItem(new Item(ItemType.ITEM_IRON, 35));
-                map[player.getPositionX()][player.getPositionY() + 1] = ' ';
-            }
-            default -> {}
+            coords[0] = player.getPositionX();
+            coords[1] = player.getPositionY() + 1;
+        }
+        else if (map[player.getPositionX()][player.getPositionY() - 1] != '#' && map[player.getPositionX()][player.getPositionY() - 1] != ' ')
+        {
+            coords[0] = player.getPositionX();
+            coords[1] = player.getPositionY() - 1;
+        }
+        else if (map[player.getPositionX() + 1][player.getPositionY()] != '#' && map[player.getPositionX() + 1][player.getPositionY()] != ' ')
+        {
+            coords[0] = player.getPositionX() + 1;
+            coords[1] = player.getPositionY();
+        }
+        else if (map[player.getPositionX() - 1][player.getPositionY()] != '#' && map[player.getPositionX() - 1][player.getPositionY()] != ' ')
+        {
+            coords[0] = player.getPositionX() - 1;
+            coords[1] = player.getPositionY();
         }
 
-        switch (map[player.getPositionX()][player.getPositionY() - 1])
+        switch (map[coords[0]][coords[1]])
         {
             case 'K' ->
             {
                 player.getInventory().addItem(new Item(ItemType.ITEM_KNIFE, 15));
-                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+                map[coords[0]][coords[1]] = ' ';
             }
             case 'G' ->
             {
                 player.getInventory().addItem(new Item(ItemType.ITEM_GUN, 35));
-                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+                map[coords[0]][coords[1]] = ' ';
             }
             case 'F' ->
             {
                 player.getInventory().addItem(new Item(ItemType.ITEM_FLINT, 35));
-                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+                map[coords[0]][coords[1]] = ' ';
             }
             case 'I' ->
             {
                 player.getInventory().addItem(new Item(ItemType.ITEM_IRON, 35));
-                map[player.getPositionX()][player.getPositionY() - 1] = ' ';
+                map[coords[0]][coords[1]] = ' ';
             }
-            default -> {}
+            case 'D' ->
+            {
+                if (player.getInventory().getInventory().containsKey(ItemType.ITEM_STEEL))
+                    state = GameState.MAP_COMPLETE;
+            }
+            case 'H' ->
+            {
+                player.setHealth(100);
+                map[coords[0]][coords[1]] = ' ';
+            }
         }
     }
 
@@ -341,32 +377,49 @@ public class Game
      */
     public void saveGame(char[][] map, File file)
     {
-        try (Writer writer = new FileWriter(file))
+        try (PrintWriter writer = new PrintWriter(file))
         {
             for (char[] row : map)
-                writer.write(String.valueOf(row));
-
-            writer.write(this.directory);
+                writer.println(row);
         }
-        catch (IOException e)
-        {
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
-            alert.setTitle(e.getMessage());
-            alert.setHeaderText(e.getMessage());
-            alert.showAndWait();
-        }
+        catch (IOException ignored) {}
     }
 
     /**
      * load existing save file
      */
-    public void loadSave()
+    public void loadSave(String directory)
     {
-
+        this.loadedFromSave = true;
+        try
+        {
+            Game.stop();
+            loadMapToCharArray(directory);
+            run();
+        }
+        catch (IOException ignored){}
     }
 
     public char[][] getMap()
     {
         return map;
+    }
+
+    public void setRenderSpeed(int speed)
+    {
+        this.renderSpeed = speed;
+    }
+
+    private void displayAlert(String title, String message, String header)
+    {
+        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.CLOSE);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        ImageView icon = new ImageView(String.valueOf(MainController.class.getResource("icon_large.png")));
+        icon.setFitHeight(48);
+        icon.setFitWidth(48);
+        alert.getDialogPane().setGraphic(icon);
+        alert.initOwner(canvas.getScene().getWindow());
+        alert.show();
     }
 }
