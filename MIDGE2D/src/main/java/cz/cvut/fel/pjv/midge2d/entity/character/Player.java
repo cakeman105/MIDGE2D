@@ -4,11 +4,13 @@ import cz.cvut.fel.pjv.midge2d.entity.item.Inventory;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 
+import java.io.Serializable;
+
 /**
  * Player class
  * @author Joshua David Crofts
  */
-public class Player extends Character
+public class Player extends Character implements Serializable
 {
     private final Inventory inventory;
     private Item currentWeapon;

@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.midge2d;
 
+import com.google.gson.JsonObject;
 import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
@@ -161,7 +162,7 @@ public class Game
             while (scanner.hasNextLine())
             {
                 char[] line = scanner.nextLine().toCharArray();
-                for (int j = 0; j < COL_COUNT - 1; j++)
+                for (int j = 0; j < line.length; j++)
                 {
                     map[i][j] = line[j];
 
@@ -377,12 +378,15 @@ public class Game
      */
     public void saveGame(char[][] map, File file)
     {
-        try (PrintWriter writer = new PrintWriter(file))
-        {
-            for (char[] row : map)
-                writer.println(row);
+        try {
+            FileOutputStream fileOut = new FileOutputStream(file);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(map);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
         }
-        catch (IOException ignored) {}
     }
 
     /**
@@ -391,13 +395,25 @@ public class Game
     public void loadSave(String directory)
     {
         this.loadedFromSave = true;
-        try
-        {
-            Game.stop();
-            loadMapToCharArray(directory);
-            run();
+        try {
+            FileInputStream fileIn = new FileInputStream(directory);
+
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+
+            char[][] newmap = (char[][]) in.readObject();
+            for (char[] row : newmap)
+                System.out.println(row);
+            // Close the streams.
+            in.close();
+            fileIn.close();
+
+            System.out.printf("Game state loaded from gameState.ser");
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("Class not found");
+            c.printStackTrace();
         }
-        catch (IOException ignored){}
     }
 
     public char[][] getMap()

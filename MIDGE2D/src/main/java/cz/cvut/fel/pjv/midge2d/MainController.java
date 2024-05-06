@@ -160,21 +160,12 @@ public class MainController
     {
         if (Game.state == GameState.GAME_RUNNING)
         {
-            //FileChooser fc = new FileChooser();
-            //fc.setTitle("Save game state");
-            //fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.txt"));
-            //fc.setInitialDirectory(new File(this.directory.concat("/saves")));
-            File file = new File("C:\\Users\\joshu\\Desktop\\testpack\\testpack_l0.midge");
-            Path copied = Paths.get("C:\\Users\\joshu\\Desktop\\testpack\\saves\\testpack_l0.midge");
-            try
-            {
-                Files.copy(file.toPath(), copied, StandardCopyOption.REPLACE_EXISTING);
-            }
-            catch (IOException e)
-            {
-
-            }
-            this.game.saveGame(this.game.getMap(), new File(copied.toString()));
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Save game state");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.midgesave"));
+            fc.setInitialDirectory(new File(this.directory.concat("/saves")));
+            File file = fc.showSaveDialog(new Stage());
+            this.game.saveGame(this.game.getMap(), file);
         }
     }
 

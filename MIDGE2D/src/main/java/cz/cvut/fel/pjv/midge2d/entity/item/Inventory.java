@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.midge2d.entity.item;
 import cz.cvut.fel.pjv.midge2d.Game;
 import cz.cvut.fel.pjv.midge2d.logic.GameState;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
  * Class for handling inventory functions
  * @author Joshua David Crofts
  */
-public class Inventory
+public class Inventory implements Serializable
 {
     private Item itemCrafting1;
     private Item itemCrafting2;
