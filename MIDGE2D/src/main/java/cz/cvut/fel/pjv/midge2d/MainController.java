@@ -136,6 +136,7 @@ public class MainController
         Game.stop();
         hud_health.setVisible(false);
         currentItem.setVisible(false);
+        hudEnemyHealth.setVisible(false);
         cvs.getGraphicsContext2D().clearRect(0, 0, cvs.getWidth(), cvs.getHeight());
         mainPane.setBackground(null);
     }
@@ -165,18 +166,20 @@ public class MainController
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MIDGE2D Save File", "*.midgesave"));
             fc.setInitialDirectory(new File(this.directory.concat("/saves")));
             File file = fc.showSaveDialog(new Stage());
-            this.game.saveGame(this.game.getMap(), file);
+            if (file != null)
+                this.game.saveGame(file);
         }
     }
 
     public void onLoadClick()
     {
         String selected = this.saveFiles.getSelectionModel().getSelectedItem();
-        if (selected != null && !selected.isEmpty())
+        if (selected != null && !selected.isEmpty() && Game.state == GameState.GAME_RUNNING)
         {
             String directory = String.format("%s/saves/%s", this.directory, selected);
             this.game.loadSave(directory);
         }
+        cvs.requestFocus();
     }
 
     /**

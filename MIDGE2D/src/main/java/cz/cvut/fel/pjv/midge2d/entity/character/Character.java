@@ -5,12 +5,14 @@ import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
 import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
+import java.io.Serializable;
+
 /**
  * Main class for characters
  * Use on its own not recommended
  * @author Joshua David Crofts
  */
-public class Character
+public class Character implements Serializable
 {
     private int health;
     private Item weapon;
@@ -79,6 +81,8 @@ public class Character
     {
         if (this.getMoving())
         {
+            this.prevPositionX = positionX;
+            this.prevPositionY = positionY;
             switch (direction)
             {
                 case Direction.MOVEMENT_UP ->
@@ -102,9 +106,6 @@ public class Character
                         this.positionY += 1;
                 }
             }
-
-            this.prevPositionX = positionX;
-            this.prevPositionY = positionY;
         }
     }
 
@@ -126,5 +127,11 @@ public class Character
     public void setHealth(int health)
     {
         this.health = health;
+    }
+
+    public void setPrevCoords(int x, int y)
+    {
+        this.prevPositionX = x;
+        this.prevPositionY = y;
     }
 }

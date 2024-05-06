@@ -1,6 +1,5 @@
 package cz.cvut.fel.pjv.midge2d;
 
-import com.google.gson.JsonObject;
 import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
@@ -16,11 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,18 +28,18 @@ public class Game
 {
     public static GameState state;
     private static AnimationTimer timer;
-    private final String directory;
-    private final char[][] map;
+    private String directory;
+    private char[][] map;
     private final Canvas canvas;
     private final ArrayList<String> mapList;
-    private final ArrayList<Enemy> enemies;
+    private ArrayList<Enemy> enemies;
     private final Graphics graphics;
     private final Pane pane;
     private int renderSpeed;
     private final Label health;
     private final Label enemyHealth;
     private final Label currentItem;
-    private final Player player;
+    private Player player;
     private boolean isFighting;
     private boolean loadedFromSave;
     private String mapToLoad;
@@ -63,7 +58,7 @@ public class Game
      */
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
-    private final Iterator<String> iterator;
+    private Iterator<String> iterator;
 
     public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth, Label currentItem)
     {
@@ -81,7 +76,7 @@ public class Game
         this.health.setVisible(true);
         this.borderPane = bp;
         this.enemyHealth = enemyHealth;
-        this.handler = new KeyHandler(this.map, this.player, this.enemyHealth);
+        this.handler = new KeyHandler(this.player, this.enemyHealth);
         this.isFighting = false;
         this.enemyFighting = null;
         this.loadedFromSave = false;
@@ -113,17 +108,20 @@ public class Game
     {
         try
         {
-            enemies.clear();
             logger.info("Init game");
             Game.state = GameState.GAME_RUNNING;
             this.mapToLoad = this.iterator.next();
             if (!loadedFromSave)
+            {
+                enemies.clear();
                 loadMapToCharArray(mapToLoad);
-            CollisionDetection detection = new CollisionDetection(this.map);
-            this.player.attachCollision(detection);
-            this.enemies.forEach(e -> e.attachCollision(detection));
+                CollisionDetection detection = new CollisionDetection(this.map);
+                this.player.attachCollision(detection);
+                this.enemies.forEach(e -> e.attachCollision(detection));
+            }
             this.pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
             borderPane.setOnKeyReleased(this.handler);
+            this.handler.setMap(this.map);
             timer.start();
         } catch (Exception ignored)
         {
@@ -376,17 +374,18 @@ public class Game
     /**
      * save the current state of the game
      */
-    public void saveGame(char[][] map, File file)
+    public void saveGame(File file)
     {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(map);
-            out.close();
-            fileOut.close();
-        } catch (IOException i) {
-            i.printStackTrace();
+        try (FileOutputStream fos = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(fos))
+        {
+            oos.writeObject(map);
+            oos.writeObject(enemies);
+            oos.writeObject(directory);
+            oos.writeObject(mapToLoad);
+            oos.writeObject(new int[] { player.getPositionX(), player.getPositionY(), player.getPrevPositionX(), player.getPrevPositionY() });
+            oos.writeObject(this.player.getInventory().getInventory());
         }
+        catch (IOException ignoredToo){}
     }
 
     /**
@@ -395,30 +394,26 @@ public class Game
     public void loadSave(String directory)
     {
         this.loadedFromSave = true;
-        try {
-            FileInputStream fileIn = new FileInputStream(directory);
-
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-
-            char[][] newmap = (char[][]) in.readObject();
-            for (char[] row : newmap)
-                System.out.println(row);
-            // Close the streams.
-            in.close();
-            fileIn.close();
-
-            System.out.printf("Game state loaded from gameState.ser");
-        } catch (IOException i) {
-            i.printStackTrace();
-        } catch (ClassNotFoundException c) {
-            System.out.println("Class not found");
-            c.printStackTrace();
+        try (FileInputStream fis = new FileInputStream(directory); ObjectInputStream ois = new ObjectInputStream(fis))
+        {
+            stop();
+            this.map = (char[][]) ois.readObject();
+            this.enemies.clear();
+            ArrayList<Enemy> enemy = (ArrayList<Enemy>) ois.readObject();
+            this.enemies.addAll(enemy);
+            this.directory = (String) ois.readObject();
+            this.mapToLoad = (String) ois.readObject();
+            int[] coords = (int[]) ois.readObject();
+            this.player.setPosition(coords[0], coords[1]);
+            this.player.setPrevCoords(coords[2], coords[3]);
+            this.player.getInventory().setInventory((HashMap<ItemType, Item>) ois.readObject());
+            run();
         }
-    }
+        catch (ClassNotFoundException e)
+        {
+            displayAlert("Corrupted save!", e.getMessage(), "Save is corrupted, please try another");
+        } catch (IOException ignored) {}
 
-    public char[][] getMap()
-    {
-        return map;
     }
 
     public void setRenderSpeed(int speed)

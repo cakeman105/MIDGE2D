@@ -101,6 +101,12 @@ public class Inventory implements Serializable
                 : "";
     }
 
+    public void setInventory(HashMap<ItemType, Item> inventory)
+    {
+        this.inventory.clear();
+        this.inventory.putAll(inventory);
+    }
+
     public void clearCrafting()
     {
         this.itemCrafting1 = null;

@@ -21,8 +21,8 @@ import java.util.logging.Logger;
  */
 public class KeyHandler implements EventHandler<KeyEvent>
 {
-    private final Player player;
-    private final char[][] map;
+    private Player player;
+    private char[][] map;
     /**
      * movement sound for player
      */
@@ -33,10 +33,9 @@ public class KeyHandler implements EventHandler<KeyEvent>
 
     protected static Logger logger = Logger.getLogger(KeyHandler.class.getName());
 
-    public KeyHandler(char[][] map, Player player, Label enemyHealth)
+    public KeyHandler( Player player, Label enemyHealth)
     {
         logger.setLevel(Level.SEVERE);
-        this.map = map;
         this.player = player;
         this.enemyHealth = enemyHealth;
         this.clip = new AudioClip(String.valueOf(MainController.class.getResource("move.wav")));
@@ -136,5 +135,10 @@ public class KeyHandler implements EventHandler<KeyEvent>
                 map[player.getPositionX()][player.getPositionY()] = 'P';
             }
         }
+    }
+
+    public void setMap(char[][] map)
+    {
+        this.map = map;
     }
 }

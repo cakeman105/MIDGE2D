@@ -1,10 +1,12 @@
 package cz.cvut.fel.pjv.midge2d.logic;
 
+import java.io.Serializable;
+
 /**
  * class for handling collision detection
  * @author Joshua David Crofts
  */
-public class CollisionDetection
+public class CollisionDetection implements Serializable
 {
     private final char[][] map;
     public CollisionDetection(char [][] map)
