@@ -1,7 +1,7 @@
 # MIDGE2D - semestrální práce v předmětu B0B36PJV
 ![image](https://gitlab.fel.cvut.cz/B232_B0B36PJV/croftjos/-/wikis/uploads/d78bd2766e7730dd047ef18a9c8513ba/icon_large.png)
 ![image](https://gitlab.fel.cvut.cz/B232_B0B36PJV/croftjos/-/wikis/uploads/85a03882794f2fd7a7df420203759d6b/image.png)
-## Status: :construction_worker: In progress
+## Status: :construction_worker: Ready for test
 
 ## Rozcestník
 ### [:pencil: Úvod](https://gitlab.fel.cvut.cz/B232_B0B36PJV/croftjos/-/wikis/%C3%9Avod)
