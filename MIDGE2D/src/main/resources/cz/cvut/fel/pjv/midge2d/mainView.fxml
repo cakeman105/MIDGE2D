@@ -63,8 +63,6 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                   <children>
                      <CheckBox layoutX="48.0" layoutY="23.0" mnemonicParsing="false" onAction="#onLoggingClick" text="Enable logging" />
-                     <Label layoutX="70.0" layoutY="50.0" text="Set log file" />
-                     <TextField layoutX="24.0" layoutY="67.0" />
                   </children></AnchorPane>
             </TitledPane>
         </panes>
@@ -72,7 +70,7 @@
    </left>
    <bottom>
        <HBox style="-fx-border-color: grey" BorderPane.alignment="CENTER">
-           <Label text="MIDGE2D ver. experimental">
+           <Label text="MIDGE2D ver. 1.0">
               <HBox.margin>
                   <Insets right="50.0" />
               </HBox.margin>
