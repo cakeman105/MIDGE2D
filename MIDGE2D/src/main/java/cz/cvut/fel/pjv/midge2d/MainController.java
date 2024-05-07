@@ -126,7 +126,7 @@ public class MainController
         closeMenu.setDisable(true);
         openMenu.setDisable(false);
         Game.state = GameState.GAME_STOPPED;
-        gameState.setText("State: " + Game.state.toString());
+        gameState.setText("State: " + Game.state);
         Game.stop();
         hud_health.setVisible(false);
         currentItem.setVisible(false);

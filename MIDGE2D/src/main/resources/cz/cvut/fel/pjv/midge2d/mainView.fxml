@@ -12,7 +12,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -61,9 +60,8 @@
             </TitledPane>
             <TitledPane animated="false" text="Debug">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <children>
                      <CheckBox layoutX="48.0" layoutY="23.0" mnemonicParsing="false" onAction="#onLoggingClick" text="Enable logging" />
-                  </children></AnchorPane>
+                </AnchorPane>
             </TitledPane>
         </panes>
       </Accordion>

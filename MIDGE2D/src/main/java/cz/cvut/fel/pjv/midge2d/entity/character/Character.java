@@ -1,7 +1,6 @@
 package cz.cvut.fel.pjv.midge2d.entity.character;
 
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
-import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import cz.cvut.fel.pjv.midge2d.logic.CollisionDetection;
 import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
@@ -127,11 +126,5 @@ public class Character implements Serializable
     public void setHealth(int health)
     {
         this.health = health;
-    }
-
-    public void setPrevCoords(int x, int y)
-    {
-        this.prevPositionX = x;
-        this.prevPositionY = y;
     }
 }

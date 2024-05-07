@@ -31,7 +31,7 @@ public class KeyHandler implements EventHandler<KeyEvent>
     private Enemy enemy;
     private final Label enemyHealth;
 
-    protected static Logger logger = Logger.getLogger(KeyHandler.class.getName());
+    protected static final Logger logger = Logger.getLogger(KeyHandler.class.getName());
 
     public KeyHandler(Label enemyHealth)
     {
