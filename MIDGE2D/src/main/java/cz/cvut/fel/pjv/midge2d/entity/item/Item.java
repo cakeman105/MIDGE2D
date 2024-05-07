@@ -1,10 +1,12 @@
 package cz.cvut.fel.pjv.midge2d.entity.item;
 
+import java.io.Serializable;
+
 /**
  * Class for handling item logic
  * @author Joshua David Crofts
  */
-public class Item
+public class Item implements Serializable
 {
     private final ItemType Type;
     private final int Value;

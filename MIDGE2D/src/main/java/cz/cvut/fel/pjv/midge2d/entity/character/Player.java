@@ -4,11 +4,13 @@ import cz.cvut.fel.pjv.midge2d.entity.item.Inventory;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 
+import java.io.Serializable;
+
 /**
  * Player class
  * @author Joshua David Crofts
  */
-public class Player extends Character
+public class Player extends Character implements Serializable
 {
     private final Inventory inventory;
     private Item currentWeapon;
@@ -35,10 +37,14 @@ public class Player extends Character
         return this.inventory;
     }
 
-    public void setCurrentWeapon(ItemType itemType)
+    public void setCurrentWeapon(int index)
     {
-        if (this.inventory.getInventory().containsKey(itemType))
-            this.currentWeapon = this.inventory.getInventory().get(itemType);
+        try
+        {
+            ItemType key = (ItemType) this.inventory.getInventory().keySet().toArray()[index];
+            this.currentWeapon = this.inventory.getInventory().get(key);
+        }
+        catch (IndexOutOfBoundsException ignored){} //nothing happens if item does not exist in inventory
     }
 
     public ItemType getCurrentWeapon()

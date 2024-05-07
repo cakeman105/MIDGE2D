@@ -3,13 +3,17 @@ package cz.cvut.fel.pjv.midge2d.entity.character;
 import cz.cvut.fel.pjv.midge2d.entity.item.Item;
 import cz.cvut.fel.pjv.midge2d.logic.Direction;
 
+import java.io.Serializable;
+
 /**
  * Enemy class
+ *
  * @author Joshua David Crofts
  */
-public class Enemy extends Character
+public class Enemy extends Character implements Serializable
 {
     private Direction direction;
+
     public Enemy(Item weapon, int health, Direction direction)
     {
         super(health, weapon);

@@ -1,13 +1,18 @@
 package cz.cvut.fel.pjv.midge2d.logic;
 
+import cz.cvut.fel.pjv.midge2d.Game;
 import cz.cvut.fel.pjv.midge2d.MainController;
 import cz.cvut.fel.pjv.midge2d.entity.character.Enemy;
 import cz.cvut.fel.pjv.midge2d.entity.character.Player;
 import cz.cvut.fel.pjv.midge2d.entity.item.ItemType;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Event handler for key presses
@@ -16,23 +21,30 @@ import javafx.scene.media.AudioClip;
  */
 public class KeyHandler implements EventHandler<KeyEvent>
 {
-    private final Player player;
-    private final char[][] map;
+    private Player player;
+    private char[][] map;
     /**
      * movement sound for player
      */
-    final AudioClip clip;
-    final AudioClip punch;
-    Enemy enemy;
+    private final AudioClip clip;
+    private final AudioClip punch;
+    private Enemy enemy;
+    private final Label enemyHealth;
 
-    public KeyHandler(char[][] map, Player player)
+    protected static final Logger logger = Logger.getLogger(KeyHandler.class.getName());
+
+    public KeyHandler(Label enemyHealth)
     {
-        this.map = map;
-        this.player = player;
+        logger.setLevel(Level.SEVERE);
+        this.enemyHealth = enemyHealth;
         this.clip = new AudioClip(String.valueOf(MainController.class.getResource("move.wav")));
         this.punch = new AudioClip(String.valueOf(MainController.class.getResource("punch.wav")));
     }
 
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
     public void setEnemy(Enemy enemy)
     {
         this.enemy = enemy;
@@ -41,18 +53,21 @@ public class KeyHandler implements EventHandler<KeyEvent>
     @Override
     public void handle(KeyEvent event)
     {
-        if (event.getEventType() == KeyEvent.KEY_RELEASED )
+        if (event.getEventType() == KeyEvent.KEY_RELEASED)
         {
             KeyCode code = event.getCode();
+            boolean flag = code == KeyCode.D || code == KeyCode.A || code == KeyCode.W || code == KeyCode.S;
 
+            logger.info(String.format("Detected key %s", code.getChar()));
             if (code == KeyCode.E)
                 punch.play();
 
-            if (code == KeyCode.D || code == KeyCode.A || code == KeyCode.W || code == KeyCode.S)
+            if (flag)
             {
                 clip.play();
                 map[player.getPositionX()][player.getPositionY()] = ' ';
             }
+
             switch (code)
             {
                 case D -> player.move(Direction.MOVEMENT_RIGHT);
@@ -61,16 +76,72 @@ public class KeyHandler implements EventHandler<KeyEvent>
                 case S -> player.move(Direction.MOVEMENT_DOWN);
                 case E ->
                 {
-                    if (enemy != null)
+                    if (enemy != null && (player.getCurrentWeapon() == ItemType.ITEM_GUN || player.getCurrentWeapon() == ItemType.ITEM_KNIFE || player.getCurrentWeapon() == ItemType.ITEM_FISTS))
                         player.hit(enemy);
-                }
-                case KeyCode.DIGIT1 -> player.setCurrentWeapon(ItemType.ITEM_KNIFE); //invariant
-                case KeyCode.DIGIT2 -> player.setCurrentWeapon(ItemType.ITEM_GUN);
 
+                }
+                case KeyCode.DIGIT1 ->
+                {
+                    if (Game.state == GameState.GAME_RUNNING)
+                        player.setCurrentWeapon(0);
+                    else
+                        player.getInventory().setItemCrafting(0);
+                }
+                case KeyCode.DIGIT2 ->
+                {
+                    if (Game.state == GameState.GAME_RUNNING)
+                        player.setCurrentWeapon(1);
+                    else
+                        player.getInventory().setItemCrafting(1);
+                }
+                case KeyCode.DIGIT3 ->
+                {
+                    if (Game.state == GameState.GAME_RUNNING)
+                        player.setCurrentWeapon(2);
+                    else
+                        player.getInventory().setItemCrafting(2);
+                }
+                case KeyCode.DIGIT4 ->
+                {
+                    if (Game.state == GameState.GAME_RUNNING)
+                        player.setCurrentWeapon(3);
+                    else
+                        player.getInventory().setItemCrafting(3);
+                }
+                case C ->
+                {
+                    if (Game.state == GameState.GAME_CRAFTING)
+                    {
+                        Game.state = GameState.GAME_RUNNING;
+                        this.enemyHealth.setVisible(false);
+                        this.player.getInventory().clearCrafting();
+                    }
+                    else
+                        Game.state = GameState.GAME_CRAFTING;
+
+                }
+
+                case ENTER ->
+                {
+                    if (Game.state == GameState.GAME_CRAFTING)
+                    {
+                        player.getInventory().craft();
+                        Game.state = GameState.GAME_RUNNING;
+                        this.enemyHealth.setVisible(false);
+                    }
+                }
             }
 
-            map[player.getPrevPositionX()][player.getPrevPositionY()] = ' ';
-            map[player.getPositionX()][player.getPositionY()] = 'P';
+            if (flag)
+            {
+                map[player.getPrevPositionX()][player.getPrevPositionY()] = ' ';
+                map[player.getPositionX()][player.getPositionY()] = 'P';
+            }
         }
+    }
+
+    public void setMap(char[][] map)
+    {
+        this.map = map;
     }
 }
