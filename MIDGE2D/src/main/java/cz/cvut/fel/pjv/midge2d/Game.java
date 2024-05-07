@@ -43,6 +43,7 @@ public class Game
     private boolean isFighting;
     private boolean loadedFromSave;
     private String mapToLoad;
+    private int index;
     private final BorderPane borderPane;
     private Enemy enemyFighting;
     private final KeyHandler handler;
@@ -53,12 +54,10 @@ public class Game
     private static final int ROW_COUNT = 18;
     /**
      * this value was chosen because of the screen size while designing the window
-     *
      * @ do NOT change the value
      */
     private static final int COL_COUNT = 26;
     protected static final Logger logger = Logger.getLogger(Game.class.getName());
-    private Iterator<String> iterator;
 
     public Game(String directory, Canvas canvas, Pane pane, Label health, BorderPane bp, Label enemyHealth, Label currentItem)
     {
@@ -69,6 +68,7 @@ public class Game
         this.map = new char[ROW_COUNT][COL_COUNT];
         this.canvas = canvas;
         this.mapList = new ArrayList<>();
+        this.index = 0;
         this.graphics = new Graphics(this.canvas);
         this.pane = pane;
         this.currentItem = currentItem;
@@ -76,17 +76,13 @@ public class Game
         this.health.setVisible(true);
         this.borderPane = bp;
         this.enemyHealth = enemyHealth;
-        this.handler = new KeyHandler(this.player, this.enemyHealth);
+        this.handler = new KeyHandler(this.enemyHealth);
         this.isFighting = false;
         this.enemyFighting = null;
         this.loadedFromSave = false;
         Game.state = GameState.GAME_STOPPED;
-        try
-        {
-            loadMaps();
-        }
+        try { loadMaps();}
         catch (IOException ignored){}
-        this.iterator = mapList.iterator();
         logger.setLevel(Level.SEVERE);
         timer = new AnimationTimer()
         {
@@ -110,10 +106,11 @@ public class Game
         {
             logger.info("Init game");
             Game.state = GameState.GAME_RUNNING;
-            this.mapToLoad = this.iterator.next();
+
             if (!loadedFromSave)
             {
                 enemies.clear();
+                this.mapToLoad = mapList.get(index++);
                 loadMapToCharArray(mapToLoad);
                 CollisionDetection detection = new CollisionDetection(this.map);
                 this.player.attachCollision(detection);
@@ -122,11 +119,9 @@ public class Game
             this.pane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
             borderPane.setOnKeyReleased(this.handler);
             this.handler.setMap(this.map);
+            this.handler.setPlayer(this.player);
             timer.start();
-        } catch (Exception ignored)
-        {
-
-        }
+        } catch (Exception ignored) {}
     }
 
     /**
@@ -279,7 +274,7 @@ public class Game
             logger.info("Player dead");
         }
 
-        if (!iterator.hasNext() && enemies.isEmpty())
+        if (index >= mapList.size() && enemies.isEmpty())
         {
             state = GameState.GAME_FINISHED;
         }
@@ -382,8 +377,7 @@ public class Game
             oos.writeObject(enemies);
             oos.writeObject(directory);
             oos.writeObject(mapToLoad);
-            oos.writeObject(new int[] { player.getPositionX(), player.getPositionY(), player.getPrevPositionX(), player.getPrevPositionY() });
-            oos.writeObject(this.player.getInventory().getInventory());
+            oos.writeObject(player);
         }
         catch (IOException ignoredToo){}
     }
@@ -403,10 +397,10 @@ public class Game
             this.enemies.addAll(enemy);
             this.directory = (String) ois.readObject();
             this.mapToLoad = (String) ois.readObject();
-            int[] coords = (int[]) ois.readObject();
-            this.player.setPosition(coords[0], coords[1]);
-            this.player.setPrevCoords(coords[2], coords[3]);
-            this.player.getInventory().setInventory((HashMap<ItemType, Item>) ois.readObject());
+            this.index = mapList.indexOf(mapToLoad) + 1;
+            this.player = null;
+            this.player = (Player) ois.readObject();
+
             run();
         }
         catch (ClassNotFoundException e)

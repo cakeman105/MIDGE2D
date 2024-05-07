@@ -33,15 +33,18 @@ public class KeyHandler implements EventHandler<KeyEvent>
 
     protected static Logger logger = Logger.getLogger(KeyHandler.class.getName());
 
-    public KeyHandler( Player player, Label enemyHealth)
+    public KeyHandler(Label enemyHealth)
     {
         logger.setLevel(Level.SEVERE);
-        this.player = player;
         this.enemyHealth = enemyHealth;
         this.clip = new AudioClip(String.valueOf(MainController.class.getResource("move.wav")));
         this.punch = new AudioClip(String.valueOf(MainController.class.getResource("punch.wav")));
     }
 
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
     public void setEnemy(Enemy enemy)
     {
         this.enemy = enemy;
