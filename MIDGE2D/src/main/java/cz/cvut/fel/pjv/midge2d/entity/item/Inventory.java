@@ -95,7 +95,8 @@ public class Inventory implements Serializable
      * outputs crafting combo to string
      * @return combination to be crafted
      */
-    public String getCraftingToString()
+    @Override
+    public String toString()
     {
         return Game.state == GameState.GAME_CRAFTING ? String.format("%s %s %s", itemCrafting1 != null ? itemCrafting1.getType().toString() : "", itemCrafting1 != null ? "+" : "", itemCrafting2 != null ? itemCrafting2.getType().toString() : "")
                 : "";

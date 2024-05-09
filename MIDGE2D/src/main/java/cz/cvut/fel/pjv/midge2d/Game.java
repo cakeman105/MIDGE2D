@@ -294,7 +294,7 @@ public class Game
             case GAME_CRAFTING ->
             {
                 enemyHealth.setVisible(true);
-                enemyHealth.setText(player.getInventory().getCraftingToString());
+                enemyHealth.setText(player.getInventory().toString());
             }
             case MAP_COMPLETE ->
             {
