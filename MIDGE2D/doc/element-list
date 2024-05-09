@@ -1,0 +1,5 @@
+module:cz.cvut.fel.pjv.midge2d
+cz.cvut.fel.pjv.midge2d
+cz.cvut.fel.pjv.midge2d.entity.character
+cz.cvut.fel.pjv.midge2d.entity.item
+cz.cvut.fel.pjv.midge2d.logic
