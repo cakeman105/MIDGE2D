@@ -27,10 +27,6 @@ public class GameTest
     private Game game;
     private Canvas canvas;
     private Pane pane;
-    private Label health;
-    private Label enemyHealth;
-    private Label currentItem;
-    private BorderPane borderPane;
     private Player player;
     private Graphics graphics;
 
@@ -45,10 +41,10 @@ public class GameTest
     {
         canvas = mock(Canvas.class);
         pane = mock(Pane.class);
-        health = mock(Label.class);
-        enemyHealth = mock(Label.class);
-        currentItem = mock(Label.class);
-        borderPane = mock(BorderPane.class);
+        Label health = mock(Label.class);
+        Label enemyHealth = mock(Label.class);
+        Label currentItem = mock(Label.class);
+        BorderPane borderPane = mock(BorderPane.class);
         player = mock(Player.class);
         graphics = mock(Graphics.class);
         game = new Game("test_directory", canvas, pane, health, borderPane, enemyHealth, currentItem);
@@ -56,7 +52,7 @@ public class GameTest
 
     @Test
     @Order(1)
-    public void intialGameStateTest()
+    public void initialGameStateTest()
     {
         assertEquals(GameState.GAME_STOPPED, Game.state);
     }
